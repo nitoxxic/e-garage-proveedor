@@ -16,8 +16,10 @@ class DuenoGarage extends Usuario {
     required super.telefono,
     required this.garages,
     required this.razonSocial,
-    required this.CUIT
-  }) : super (
+    required this.CUIT,
+    required bool biometriaHabilitada, // Agregar este parámetro
+  }) : super(
           esAdmin: true,
+          biometriaHabilitada: biometriaHabilitada, // Pasarlo al constructor padre
         );
 }
