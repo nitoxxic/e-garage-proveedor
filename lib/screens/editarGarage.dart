@@ -2,9 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/input_text_login.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/logo.dart';
 import 'package:flutter/material.dart';
-
-
 
 class EditarGarage extends StatefulWidget {
   final Garage garage;
@@ -26,8 +25,10 @@ class _EditarGarageState extends State<EditarGarage> {
     super.initState();
     nombreController = TextEditingController(text: widget.garage.nombre);
     direccionController = TextEditingController(text: widget.garage.direccion);
-    lugaresTotalesController = TextEditingController(text: widget.garage.lugaresTotales.toString());
-    lugaresDisponiblesController = TextEditingController(text: widget.garage.lugaresDisponibles.toString());
+    lugaresTotalesController =
+        TextEditingController(text: widget.garage.lugaresTotales.toString());
+    lugaresDisponiblesController = TextEditingController(
+        text: widget.garage.lugaresDisponibles.toString());
   }
 
   @override
@@ -51,10 +52,12 @@ class _EditarGarageState extends State<EditarGarage> {
         'lugaresDisponibles': int.parse(lugaresDisponiblesController.text),
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Datos guardados exitosamente.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Datos guardados exitosamente.')));
       Navigator.of(context).pop();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error al guardar cambios: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al guardar cambios: $e')));
     }
   }
 
@@ -74,10 +77,7 @@ class _EditarGarageState extends State<EditarGarage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 30),
-                Image.asset(
-                  'assets/images/car_logo.png',
-                  height: 100,
-                ),
+                const LogoWidget(size: 300, showText: false),
                 const SizedBox(height: 20),
                 const Center(
                   child: Text(
@@ -90,28 +90,21 @@ class _EditarGarageState extends State<EditarGarage> {
                 ),
                 const SizedBox(height: 20),
                 InputTextLogin(
-                  hintText: 'Nombre del Garage',
-                  icon: const Icon(Icons.home),
+                  hintText: 'Nombre',
+                  icon: const Icon(Icons.location_city, color: Colors.white),
+                  controller: nombreController,
                 ),
                 const SizedBox(height: 20),
                 InputTextLogin(
                   hintText: 'Dirección',
-                  icon: const Icon(Icons.location_on),
+                  icon: const Icon(Icons.location_on, color: Colors.white),
+                  controller: direccionController,
                 ),
                 const SizedBox(height: 20),
                 InputTextLogin(
                   hintText: 'Lugares Totales',
-                  icon: const Icon(Icons.event_seat),
-                ),
-                const SizedBox(height: 20),
-                InputTextLogin(
-                  hintText: 'Lugares Disponibles',
-                  icon: const Icon(Icons.event_seat),
-                ),
-                const SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: _guardarCambios,
-                  child: const Text("Guardar Cambios"),
+                  icon: const Icon(Icons.add_location_alt, color: Colors.white),
+                  controller: lugaresTotalesController,
                 ),
               ],
             ),

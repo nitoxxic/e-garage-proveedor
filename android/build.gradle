@@ -1,3 +1,25 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.2.2'  // o la versión que estés utilizando
+        classpath 'com.google.gms:google-services:4.3.10'  // Google services plugin versión
+    }
+    subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            project.android {
+                if (namespace == null) {
+                    namespace project.group
+                }
+            }
+        }
+    }
+}
+}
+
 allprojects {
     repositories {
         google()

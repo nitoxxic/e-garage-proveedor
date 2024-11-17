@@ -4,7 +4,6 @@ import 'package:e_garage_proveedor/widgetsPersonalizados/agregarGarage.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/detalleGarage.dart';
 import 'package:flutter/material.dart';
 
-
 class ListaGarages extends StatefulWidget {
   const ListaGarages({super.key});
 
@@ -40,7 +39,8 @@ class _ListaGaragesState extends State<ListaGarages> {
         stream: _getGarages(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: Colors.white));
+            return const Center(
+                child: CircularProgressIndicator(color: Colors.white));
           }
 
           if (snapshot.hasError) {
@@ -72,7 +72,8 @@ class _ListaGaragesState extends State<ListaGarages> {
                 child: ListTile(
                   title: Text(
                     garages[index].nombre,
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
                     garages[index].direccion,
@@ -82,7 +83,8 @@ class _ListaGaragesState extends State<ListaGarages> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => DetalleGarage(garage: garages[index]),
+                        builder: (context) =>
+                            DetalleGarage(garage: garages[index]),
                       ),
                     );
                   },

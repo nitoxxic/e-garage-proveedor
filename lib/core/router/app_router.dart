@@ -37,5 +37,6 @@ final GoRouter appRouter = GoRouter(
         return EditarGarage(garage: garage);
       },
     ),
+    
   ],
 );
