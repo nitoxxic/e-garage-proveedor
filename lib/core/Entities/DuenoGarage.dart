@@ -1,5 +1,6 @@
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
 import 'package:e_garage_proveedor/core/Entities/Usuario.dart';
+import 'package:flutter/material.dart';
 
 class DuenoGarage extends Usuario {
   List<Garage> garages;
@@ -21,5 +22,5 @@ class DuenoGarage extends Usuario {
   }) : super(
           esAdmin: true,
           biometriaHabilitada: biometriaHabilitada,
-        );
+    );
 }
