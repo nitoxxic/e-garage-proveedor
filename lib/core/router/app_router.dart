@@ -5,10 +5,16 @@ import 'package:e_garage_proveedor/screens/EditarGarage.dart';
 import 'package:e_garage_proveedor/screens/ListaGarages.dart';
 import 'package:e_garage_proveedor/screens/LoginAdministrador.dart';
 import 'package:e_garage_proveedor/screens/PantallaLogin.dart';
+import 'package:e_garage_proveedor/screens/SelectionScreen.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/login',
+  initialLocation: '/selectionScreen',
   routes: [
+    GoRoute(
+      path: '/selectionScreen',
+      name: 'SelectionScreen',
+      builder: (context, state) => SelectionScreen(),
+    ),
     GoRoute(
       path: '/login',
       name: 'LoginScreen',
@@ -37,6 +43,5 @@ final GoRouter appRouter = GoRouter(
         return EditarGarage(garage: garage);
       },
     ),
-    
   ],
 );

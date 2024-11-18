@@ -78,56 +78,65 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
     }
   }
 
-  Future<void> guardarGarage(bool statusFormulario) async {
-    if (statusFormulario) {
-      try {
-        String nombre = _nombreController.text;
-        String direccion = _direccionController.text;
-        int lugaresTotales = int.tryParse(_lugaresTotalesController.text) ?? 0;
+Future<void> guardarGarage(bool statusFormulario) async {
+  if (statusFormulario) {
+    try {
+      String nombre = _nombreController.text;
+      String direccion = _direccionController.text;
+      int lugaresTotales = int.tryParse(_lugaresTotalesController.text) ?? 0;
 
-        if (lugaresTotales <= 0) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('El número de lugares debe ser mayor a 0.')),
-          );
-          return;
-        }
-
-        // Obtener coordenadas usando Nominatim
-        LatLng? coordenadas = await obtenerCoordenadasDesdeDireccion(direccion);
-
-        if (coordenadas == null) {
-          return; // Si no se pudieron obtener las coordenadas, no continuar.
-        }
-
-        double latitude = coordenadas.latitude;
-        double longitude = coordenadas.longitude;
-
-        // Crear el objeto Garage
-        final nuevoGarage = Garage(
-          id: '',
-          nombre: nombre,
-          direccion: direccion,
-          lugaresTotales: lugaresTotales,
-          latitude: latitude,
-          longitude: longitude,
-        );
-
-        // Guardar el garage en Firestore
-        await db.collection('garages').add(nuevoGarage.toFirestore());
-
+      if (lugaresTotales <= 0) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Garage agregado exitosamente.')),
+          const SnackBar(content: Text('El número de lugares debe ser mayor a 0.')),
         );
-
-        // Regresar a la pantalla anterior
-        context.goNamed('ListaGarages');
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al agregar garage: $e')),
-        );
+        return;
       }
+
+      // Obtener coordenadas usando Nominatim
+      LatLng? coordenadas = await obtenerCoordenadasDesdeDireccion(direccion);
+
+      if (coordenadas == null) {
+        return; // Si no se pudieron obtener las coordenadas, no continuar.
+      }
+
+      double latitude = coordenadas.latitude;
+      double longitude = coordenadas.longitude;
+
+      // Crear un mapa para Firestore
+      Map<String, dynamic> garageData = {
+        'nombre': nombre,
+        'direccion': direccion,
+        'lugaresTotales': lugaresTotales,
+        'latitude': latitude,
+        'longitude': longitude,
+      };
+
+      // Guardar el garage en Firestore y obtener su ID
+      DocumentReference docRef = await db.collection('garages').add(garageData);
+
+      // Actualizar el objeto Garage con el ID generado por Firestore
+      final nuevoGarage = Garage(
+        id: docRef.id, // Asignar el ID generado
+        nombre: nombre,
+        direccion: direccion,
+        lugaresTotales: lugaresTotales,
+        latitude: latitude,
+        longitude: longitude,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Garage agregado exitosamente.')),
+      );
+
+      // Regresar a la pantalla anterior
+      context.goNamed('ListaGarages');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al agregar garage: $e')),
+      );
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {

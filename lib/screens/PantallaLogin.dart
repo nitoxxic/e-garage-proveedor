@@ -48,7 +48,7 @@ class LoginScreen extends ConsumerWidget {
           children: [
             BackButtonWidget(
               onPressed: () {
-                Navigator.pop(context);
+                context.push('/selectionScreen');
               },
             ),
             IconButton(
@@ -93,7 +93,7 @@ class LoginScreen extends ConsumerWidget {
       final String? email = prefs.getString('authToken');
 
       if (email != null) {
-        QuerySnapshot querySnapshot = await db.collection("users").where("email", isEqualTo: email).get();
+        QuerySnapshot querySnapshot = await db.collection("duenos").where("email", isEqualTo: email).get();
 
         if (querySnapshot.docs.isNotEmpty) {
           Map<String, dynamic>? userData = querySnapshot.docs.first.data() as Map<String, dynamic>?;
@@ -129,7 +129,7 @@ class LoginScreen extends ConsumerWidget {
 
   Future<void> validarCredenciales(BuildContext context, WidgetRef ref) async {
     try {
-      QuerySnapshot querySnapshot = await db.collection("users").where("email", isEqualTo: _email).get();
+      QuerySnapshot querySnapshot = await db.collection("duenos").where("email", isEqualTo: _email).get();
 
       if (querySnapshot.docs.isNotEmpty) {
         Map<String, dynamic>? userData = querySnapshot.docs.first.data() as Map<String, dynamic>?;

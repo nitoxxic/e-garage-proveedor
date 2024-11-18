@@ -1,5 +1,8 @@
 import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
 import 'package:e_garage_proveedor/screens/EditarDatosAdmin.dart';
+import 'package:e_garage_proveedor/screens/ingresos.dart';
+import 'package:e_garage_proveedor/screens/pantallaReservas.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/lugaresDisponibles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -38,21 +41,30 @@ class MenuAdministrador extends ConsumerWidget {
               leading: const Icon(Icons.calendar_today, size: 40, color: Colors.black),
               title: const Text('Reservas', style: TextStyle(fontSize: 18)),
               onTap: () {
-                // Navegación a la pantalla de reservas
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PantallaReservas()),
+                );
               },
             ),
             ListTile(
               leading: const Icon(Icons.check_box, size: 40, color: Colors.black),
               title: const Text('Lugares Disponibles', style: TextStyle(fontSize: 18)),
               onTap: () {
-                // Navegación a la pantalla de lugares disponibles
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LugaresDisponibles()),
+                );
               },
             ),
             ListTile(
               leading: const Icon(Icons.attach_money, size: 40, color: Colors.black),
               title: const Text('Ingresos', style: TextStyle(fontSize: 18)),
               onTap: () {
-                // Navegación a la pantalla de ingresos
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Ingresos()),
+                );
               },
             ),
             ListTile(

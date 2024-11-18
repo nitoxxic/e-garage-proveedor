@@ -23,6 +23,8 @@ class _IngresosState extends State<Ingresos> {
         nombre: data['nombre'] ?? 'Garage sin nombre',
         direccion: data['direccion'] ?? 'Dirección desconocida',
         lugaresTotales: data['lugaresTotales'] ?? 0,
+         latitude: data['latitude'] ?? 0.0,
+         longitude: data['longitude'] ?? 0.0,
       );
     }).toList();
   });
