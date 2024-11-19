@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/screens/LoginAdministrador.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/MenuAdministrador.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/dialog_box.dart';
 import 'package:flutter/material.dart';
 
@@ -135,6 +136,7 @@ class _RetirarVehiculovehiculoState extends State<Retirarvehiculo> {
         centerTitle: true,
         title: const Text('Retirar vehiculo'),
       ),
+      drawer: const MenuAdministrador(),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(

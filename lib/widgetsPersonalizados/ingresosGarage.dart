@@ -30,8 +30,9 @@ class _IngresosGarageState extends State<IngresosGarage> {
   Stream<List<Reserva>> _getReservasMensuales(String garageId) {
     DateTime now = DateTime.now();
     DateTime startOfMonth = DateTime(now.year, now.month, 1);
-  DateTime endOfMonth = DateTime(now.year, now.month + 1, 1).subtract(const Duration(days: 1));
-    
+    DateTime endOfMonth =
+        DateTime(now.year, now.month + 1, 1).subtract(const Duration(days: 1));
+
     return _db
         .collection('Reservas')
         .where('garajeId', isEqualTo: garageId)
@@ -39,13 +40,15 @@ class _IngresosGarageState extends State<IngresosGarage> {
         .where('fechaHoraInicio', isLessThanOrEqualTo: endOfMonth)
         .snapshots()
         .map((querySnapshot) {
-      List<Reserva> reservas = querySnapshot.docs.map((doc) => Reserva.fromFirestore(doc)).toList();
+      List<Reserva> reservas =
+          querySnapshot.docs.map((doc) => Reserva.fromFirestore(doc)).toList();
 
       setState(() {
-        ingresosMensuales = reservas.fold(0.0, (total, reserva) => total + reserva.monto);
+        ingresosMensuales =
+            reservas.fold(0.0, (total, reserva) => total + reserva.monto);
         totalReservas = reservas.length;
       });
-      
+
       return reservas;
     });
   }
@@ -71,7 +74,10 @@ class _IngresosGarageState extends State<IngresosGarage> {
               children: [
                 const Text(
                   'Resumen del Mes',
-                  style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -91,7 +97,8 @@ class _IngresosGarageState extends State<IngresosGarage> {
               stream: _reservasStream,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator(color: Colors.white));
+                  return const Center(
+                      child: CircularProgressIndicator(color: Colors.white));
                 }
 
                 if (snapshot.hasError) {
@@ -120,21 +127,25 @@ class _IngresosGarageState extends State<IngresosGarage> {
                     Reserva reserva = reservas[index];
                     return Card(
                       color: Colors.grey[900],
-                      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 16),
                       child: ListTile(
                         title: Text(
                           'Reserva ${index + 1}',
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(
-                          'Monto: \$${reserva.monto.toStringAsFixed(2)}',
+                          'Monto: \$${reserva.monto.toStringAsFixed(2)}\n'
+                          'Pago: ${reserva.estaPago ? 'Si' : 'No'}',
                           style: const TextStyle(color: Colors.white70),
                         ),
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DetalleReserva(reserva: reserva),
+                              builder: (context) =>
+                                  DetalleReserva(reserva: reserva),
                             ),
                           );
                         },

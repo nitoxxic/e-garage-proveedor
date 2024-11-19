@@ -185,7 +185,7 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
         };
 
         // Guardar el garage en Firestore y obtener su ID
-        await db.collection('garages').add(garageData);
+        await db.collection('garages').doc(docRef.id).set(garageData);
 
         final relacionAdminGarage =
             adminGarage(idAdmin: idAdmin, idGarage: docRef.id);

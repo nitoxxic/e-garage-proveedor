@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/screens/LoginAdministrador.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/MenuAdministrador.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/dialog_box.dart';
 import 'package:flutter/material.dart';
 
@@ -95,6 +96,7 @@ class _IngresarvehiculoState extends State<Ingresarvehiculo> {
         await db.collection('Reservas').doc(docReserva.id).update({
           'fueAlGarage': true,
         });
+
         showBox(
             'Se ha ingresado el vehiculo con patente ${docReserva['elvehiculo']['patente']}');
       } else {
@@ -118,6 +120,7 @@ class _IngresarvehiculoState extends State<Ingresarvehiculo> {
         centerTitle: true,
         title: const Text('Ingresar vehiculo'),
       ),
+      drawer: const MenuAdministrador(),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(

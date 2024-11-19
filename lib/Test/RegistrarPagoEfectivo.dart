@@ -63,7 +63,7 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
   }
 
   // Función para retirar el auto de la base de datos
-  Future<void> _ingresarVehiculo(String patenteBuscado) async {
+  Future<void> _registrarPago(String patenteBuscado) async {
     final db = FirebaseFirestore.instance;
 
     // busca si existe una reserva con la patente ingresada
@@ -152,7 +152,7 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
                                 ? () async {
                                     // Si el formulario es válido, retira el vehículo
                                     if (_formKey.currentState!.validate()) {
-                                      await _ingresarVehiculo(
+                                      await _registrarPago(
                                           _patenteController.text);
                                     }
                                   }

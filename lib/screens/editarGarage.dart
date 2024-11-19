@@ -71,13 +71,17 @@ class _EditarGarageState extends State<EditarGarage> {
           return LatLng(lat, lon);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('No se encontró la ubicación para la dirección proporcionada.')),
+            const SnackBar(
+                content: Text(
+                    'No se encontró la ubicación para la dirección proporcionada.')),
           );
           return null;
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error al comunicarse con el servicio de geocodificación.')),
+          const SnackBar(
+              content: Text(
+                  'Error al comunicarse con el servicio de geocodificación.')),
         );
         return null;
       }
@@ -99,19 +103,24 @@ class _EditarGarageState extends State<EditarGarage> {
 
       if (lugaresTotales <= 0 || lugaresDisponibles < 0) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Los lugares totales deben ser mayores a 0 y los disponibles no pueden ser negativos.')),
+          const SnackBar(
+              content: Text(
+                  'Los lugares totales deben ser mayores a 0 y los disponibles no pueden ser negativos.')),
         );
         return;
       }
 
       // Obtener coordenadas actualizadas si la dirección cambia
-      LatLng? coordenadas = await obtenerCoordenadasDesdeDireccion(direccionController.text);
+      LatLng? coordenadas =
+          await obtenerCoordenadasDesdeDireccion(direccionController.text);
 
       if (coordenadas == null) {
         return; // Si no se obtienen coordenadas, no continuar
       }
 
       // Actualizar los datos del garaje en Firestore
+      print('*****************************************************');
+      print(widget.garage.id);
       await db.collection('garages').doc(widget.garage.id).update({
         'nombre': nombreController.text,
         'direccion': direccionController.text,
@@ -182,7 +191,8 @@ class _EditarGarageState extends State<EditarGarage> {
                 const SizedBox(height: 20),
                 InputTextLogin(
                   hintText: 'Lugares Disponibles',
-                  icon: const Icon(Icons.add_circle_outline, color: Colors.white),
+                  icon:
+                      const Icon(Icons.add_circle_outline, color: Colors.white),
                   controller: lugaresDisponiblesController,
                 ),
                 const SizedBox(height: 20),

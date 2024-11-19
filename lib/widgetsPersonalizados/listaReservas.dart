@@ -5,7 +5,6 @@ import 'package:e_garage_proveedor/core/Entities/Reserva.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter/material.dart';
 
-
 class ListaReservas extends StatefulWidget {
   final String garageId;
 
@@ -30,13 +29,16 @@ class _ListaReservasState extends State<ListaReservas> {
   Future<void> _cargarReservas() async {
     final snapshot = await FirebaseFirestore.instance
         .collection('Reservas')
-        .where('garajeId', isEqualTo: widget.garageId)
+        .where(
+          'garajeId',
+          isEqualTo: widget.garageId,
+        )
+        .where('seRetiro', isEqualTo: false)
         .get();
 
     setState(() {
-      reservas = snapshot.docs
-          .map((doc) => Reserva.fromFirestore(doc))
-          .toList();
+      reservas =
+          snapshot.docs.map((doc) => Reserva.fromFirestore(doc)).toList();
       _aplicarFiltro();
     });
   }
@@ -47,7 +49,8 @@ class _ListaReservasState extends State<ListaReservas> {
         final ahora = DateTime.now();
         switch (filtroActual) {
           case 'Último mes':
-            return reserva.startTime.isAfter(ahora.subtract(const Duration(days: 30)));
+            return reserva.startTime
+                .isAfter(ahora.subtract(const Duration(days: 30)));
           case 'Activas':
             return reserva.endTime.isAfter(ahora);
           case 'Pasadas':
@@ -71,8 +74,8 @@ class _ListaReservasState extends State<ListaReservas> {
       backgroundColor: const Color(0xFF1F1F1F),
       appBar: AppBar(
         leading: Transform.scale(
-          scale: 0.7, 
-          child: const BackButtonWidget(), 
+          scale: 0.7,
+          child: const BackButtonWidget(),
         ),
         backgroundColor: const Color(0xFF2E2E2E),
         title: const Text(
@@ -112,7 +115,8 @@ class _ListaReservasState extends State<ListaReservas> {
             },
             itemBuilder: (context) => [
               const PopupMenuItem(value: 'Todas', child: Text('Todas')),
-              const PopupMenuItem(value: 'Último mes', child: Text('Último mes')),
+              const PopupMenuItem(
+                  value: 'Último mes', child: Text('Último mes')),
               const PopupMenuItem(value: 'Activas', child: Text('Activas')),
               const PopupMenuItem(value: 'Pasadas', child: Text('Pasadas')),
             ],
@@ -132,7 +136,8 @@ class _ListaReservasState extends State<ListaReservas> {
             child: ListTile(
               contentPadding: const EdgeInsets.all(16),
               title: Text(
-                '${reserva.elvehiculo.marca} ${reserva.elvehiculo.modelo}',
+                '${reserva.elvehiculo.marca} ${reserva.elvehiculo.modelo}\n'
+                '${reserva.elvehiculo.patente}',
                 style: const TextStyle(
                   fontFamily: 'Roboto',
                   fontSize: 16,
@@ -141,7 +146,8 @@ class _ListaReservasState extends State<ListaReservas> {
                 ),
               ),
               subtitle: Text(
-                'Inicio: ${reserva.startTime} - Fin: ${reserva.endTime}',
+                'Inicio: ${reserva.startTime} \n'
+                'Fin: ${reserva.endTime}',
                 style: TextStyle(
                   fontFamily: 'Roboto',
                   fontSize: 14,
