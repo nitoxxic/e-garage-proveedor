@@ -14,7 +14,7 @@ class SelectionScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/car_logo.png',
+              'assets/images/logo_proveedor.png',
               height: 150,
             ),
             const SizedBox(height: 30),
@@ -68,7 +68,7 @@ class SelectionScreen extends StatelessWidget {
                 ),
               ),
               child: const Text(
-                'REGISTRAR DUEÑO DE GARAGE',
+                'REGISTRAR DUEÑO',
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
             ),
