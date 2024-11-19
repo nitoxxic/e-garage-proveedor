@@ -24,21 +24,23 @@ class LoginScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 30),
-            const LogoWidget(size: 300, showText: false),
-            const SizedBox(height: 20),
-            const SizedBox(height: 50),
-            _buildTextField('Usuario', (value) => _email = value),
-            const SizedBox(height: 20),
-            _buildTextField('Password', (value) => _clave = value, obscureText: true),
-            const SizedBox(height: 50),
-          ],
+      body:  SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 30),
+              const LogoWidget(size: 300, showText: false),
+              const SizedBox(height: 20),
+              const SizedBox(height: 50),
+              _buildTextField('Usuario', (value) => _email = value),
+              const SizedBox(height: 20),
+              _buildTextField('Password', (value) => _clave = value, obscureText: true),
+              const SizedBox(height: 50),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: Padding(

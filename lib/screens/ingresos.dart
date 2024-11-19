@@ -25,6 +25,7 @@ class _IngresosState extends State<Ingresos> {
         lugaresTotales: data['lugaresTotales'] ?? 0,
          latitude: data['latitude'] ?? 0.0,
          longitude: data['longitude'] ?? 0.0,
+        imageUrl: data['imageUrl'] ?? 'imagen no disponible'
       );
     }).toList();
   });

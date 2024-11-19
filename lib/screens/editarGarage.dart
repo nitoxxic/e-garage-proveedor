@@ -4,6 +4,9 @@ import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/input_text_login.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/logo.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:latlong2/latlong.dart';
 
 class EditarGarage extends StatefulWidget {
   final Garage garage;
@@ -19,6 +22,7 @@ class _EditarGarageState extends State<EditarGarage> {
   late TextEditingController direccionController;
   late TextEditingController lugaresTotalesController;
   late TextEditingController lugaresDisponiblesController;
+  String? _imagenUrl; // URL de la imagen seleccionada
 
   @override
   void initState() {
@@ -29,6 +33,7 @@ class _EditarGarageState extends State<EditarGarage> {
         TextEditingController(text: widget.garage.lugaresTotales.toString());
     lugaresDisponiblesController = TextEditingController(
         text: widget.garage.lugaresDisponibles.toString());
+    _imagenUrl = widget.garage.imageUrl; // Inicializar con la imagen existente
   }
 
   @override
@@ -40,24 +45,91 @@ class _EditarGarageState extends State<EditarGarage> {
     super.dispose();
   }
 
+  // Función para seleccionar imagen
+  Future<void> _seleccionarImagen() async {
+    // Aquí puedes agregar lógica para seleccionar una imagen (por ejemplo, usando un paquete como image_picker)
+    // Por ahora, simulemos que se seleccionó una imagen:
+    setState(() {
+      _imagenUrl = "https://example.com/nueva-imagen.jpg"; // URL de ejemplo
+    });
+  }
+
+  // Función para obtener coordenadas usando Nominatim
+  Future<LatLng?> obtenerCoordenadasDesdeDireccion(String direccion) async {
+    final url = Uri.parse(
+      'https://nominatim.openstreetmap.org/search?q=$direccion&format=json&addressdetails=1&limit=1',
+    );
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data.isNotEmpty) {
+          final lat = double.parse(data[0]['lat']);
+          final lon = double.parse(data[0]['lon']);
+          return LatLng(lat, lon);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('No se encontró la ubicación para la dirección proporcionada.')),
+          );
+          return null;
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error al comunicarse con el servicio de geocodificación.')),
+        );
+        return null;
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al obtener la ubicación: $e')),
+      );
+      return null;
+    }
+  }
+
   Future<void> _guardarCambios() async {
     final db = FirebaseFirestore.instance;
 
     try {
+      // Validar lugares totales y disponibles
+      int lugaresTotales = int.parse(lugaresTotalesController.text);
+      int lugaresDisponibles = int.parse(lugaresDisponiblesController.text);
+
+      if (lugaresTotales <= 0 || lugaresDisponibles < 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Los lugares totales deben ser mayores a 0 y los disponibles no pueden ser negativos.')),
+        );
+        return;
+      }
+
+      // Obtener coordenadas actualizadas si la dirección cambia
+      LatLng? coordenadas = await obtenerCoordenadasDesdeDireccion(direccionController.text);
+
+      if (coordenadas == null) {
+        return; // Si no se obtienen coordenadas, no continuar
+      }
+
       // Actualizar los datos del garaje en Firestore
       await db.collection('garages').doc(widget.garage.id).update({
         'nombre': nombreController.text,
         'direccion': direccionController.text,
-        'lugaresTotales': int.parse(lugaresTotalesController.text),
-        'lugaresDisponibles': int.parse(lugaresDisponiblesController.text),
+        'lugaresTotales': lugaresTotales,
+        'lugaresDisponibles': lugaresDisponibles,
+        'latitude': coordenadas.latitude,
+        'longitude': coordenadas.longitude,
+        'imagenUrl': _imagenUrl, // Actualizar la URL de la imagen
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Datos guardados exitosamente.')));
+        const SnackBar(content: Text('Datos guardados exitosamente.')),
+      );
       Navigator.of(context).pop();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al guardar cambios: $e')));
+        SnackBar(content: Text('Error al guardar cambios: $e')),
+      );
     }
   }
 
@@ -68,6 +140,7 @@ class _EditarGarageState extends State<EditarGarage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
+        title: const Text('Editar Garage'),
       ),
       body: Stack(
         children: [
@@ -105,6 +178,32 @@ class _EditarGarageState extends State<EditarGarage> {
                   hintText: 'Lugares Totales',
                   icon: const Icon(Icons.add_location_alt, color: Colors.white),
                   controller: lugaresTotalesController,
+                ),
+                const SizedBox(height: 20),
+                InputTextLogin(
+                  hintText: 'Lugares Disponibles',
+                  icon: const Icon(Icons.add_circle_outline, color: Colors.white),
+                  controller: lugaresDisponiblesController,
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: _seleccionarImagen,
+                      child: const Text('Seleccionar Imagen'),
+                    ),
+                    const SizedBox(width: 10),
+                    if (_imagenUrl != null)
+                      Text(
+                        'Imagen seleccionada',
+                        style: TextStyle(color: Colors.green),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _guardarCambios,
+                  child: const Center(child: Text('Guardar Cambios')),
                 ),
               ],
             ),
