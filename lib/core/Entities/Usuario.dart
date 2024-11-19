@@ -8,20 +8,22 @@ class Usuario {
   String apellido;
   String dni;
   String telefono;
+  String? token;
   bool esAdmin;
   bool biometriaHabilitada;
 
-  Usuario(
-      {required this.id,
-      required this.email,
-      required this.password,
-      required this.nombre,
-      required this.apellido,
-      required this.dni,
-      required this.telefono,
-      this.esAdmin = false,
-      required this.biometriaHabilitada,
-      });
+  Usuario({
+    required this.id,
+    required this.email,
+    required this.password,
+    required this.nombre,
+    required this.apellido,
+    required this.dni,
+    required this.telefono,
+    this.token,
+    this.esAdmin = false,
+    required this.biometriaHabilitada,
+  });
 
   Map<String, dynamic> toFirestore() {
     return {
@@ -32,6 +34,7 @@ class Usuario {
       "apellido": apellido,
       "dni": dni,
       "telefono": telefono,
+      "token": token,
       'esAdmin':
           esAdmin ?? false, // Asegúrate de asignar false si esAdmin es null
     };
@@ -50,21 +53,24 @@ class Usuario {
         apellido: data?['apellido'],
         dni: data?['dni'],
         telefono: data?['telefono'],
+        token: data?['token'],
         esAdmin: data?['esAdmin'] ?? false,
-        biometriaHabilitada: data?['biometriaHabilitada']); // Si esAdmin es null, asigna false
+        biometriaHabilitada:
+            data?['biometriaHabilitada']); // Si esAdmin es null, asigna false
   }
 
-  Usuario copywith(
-      {String? id,
-      String? email,
-      String? password,
-      String? nombre,
-      String? apellido,
-      String? dni,
-      String? telefono,
-      bool? esAdmin,
-      bool? biometriaHabilitada,
-      }) {
+  Usuario copywith({
+    String? id,
+    String? email,
+    String? password,
+    String? nombre,
+    String? apellido,
+    String? dni,
+    String? telefono,
+    String? token,
+    bool? esAdmin,
+    bool? biometriaHabilitada,
+  }) {
     return Usuario(
         id: id ?? this.id,
         email: email ?? this.email,
@@ -73,8 +79,9 @@ class Usuario {
         apellido: apellido ?? this.apellido,
         dni: dni ?? this.dni,
         telefono: telefono ?? this.telefono,
-        esAdmin:
-            esAdmin ?? this.esAdmin ?? false,
-            biometriaHabilitada: biometriaHabilitada ?? this.biometriaHabilitada); // Usa false si esAdmin es null
+        token: token ?? this.token,
+        esAdmin: esAdmin ?? this.esAdmin ?? false,
+        biometriaHabilitada: biometriaHabilitada ??
+            this.biometriaHabilitada); // Usa false si esAdmin es null
   }
 }

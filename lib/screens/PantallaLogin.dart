@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
+import 'package:e_garage_proveedor/preferencias/pref_usuarios.dart';
+import 'package:e_garage_proveedor/services/bloc/notifications_bloc.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/logo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local_auth/local_auth.dart';
@@ -22,9 +25,13 @@ class LoginScreen extends ConsumerWidget {
       _verificarBiometria(context, ref);
     });
 
+    context.read<NotificationsBloc>().requestPermission();
+    var prefs = PreferenciasUsuario();
+    print('TOKEN: ' + prefs.token);
+
     return Scaffold(
       backgroundColor: Colors.black,
-      body:  SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -37,7 +44,8 @@ class LoginScreen extends ConsumerWidget {
               const SizedBox(height: 50),
               _buildTextField('Usuario', (value) => _email = value),
               const SizedBox(height: 20),
-              _buildTextField('Password', (value) => _clave = value, obscureText: true),
+              _buildTextField('Password', (value) => _clave = value,
+                  obscureText: true),
               const SizedBox(height: 50),
             ],
           ),
@@ -54,13 +62,15 @@ class LoginScreen extends ConsumerWidget {
               },
             ),
             IconButton(
-              icon: const Icon(Icons.fingerprint, color: Colors.white, size: 40),
+              icon:
+                  const Icon(Icons.fingerprint, color: Colors.white, size: 40),
               onPressed: () async {
                 bool isBiometricSupported = await auth.isDeviceSupported();
                 if (isBiometricSupported) {
                   await _authenticate(context, ref);
                 } else {
-                  _showErrorSnackbar(context, 'El dispositivo no admite autenticación biométrica.');
+                  _showErrorSnackbar(context,
+                      'El dispositivo no admite autenticación biométrica.');
                 }
               },
             ),
@@ -95,10 +105,14 @@ class LoginScreen extends ConsumerWidget {
       final String? email = prefs.getString('authToken');
 
       if (email != null) {
-        QuerySnapshot querySnapshot = await db.collection("duenos").where("email", isEqualTo: email).get();
+        QuerySnapshot querySnapshot = await db
+            .collection("duenos")
+            .where("email", isEqualTo: email)
+            .get();
 
         if (querySnapshot.docs.isNotEmpty) {
-          Map<String, dynamic>? userData = querySnapshot.docs.first.data() as Map<String, dynamic>?;
+          Map<String, dynamic>? userData =
+              querySnapshot.docs.first.data() as Map<String, dynamic>?;
           bool biometriaHabilitada = userData?['biometriaHabilitada'] ?? false;
 
           if (biometriaHabilitada) {
@@ -111,7 +125,8 @@ class LoginScreen extends ConsumerWidget {
     }
   }
 
-  Widget _buildTextField(String label, ValueChanged<String> onChanged, {bool obscureText = false}) {
+  Widget _buildTextField(String label, ValueChanged<String> onChanged,
+      {bool obscureText = false}) {
     return TextField(
       obscureText: obscureText,
       style: const TextStyle(color: Colors.white),
@@ -131,10 +146,13 @@ class LoginScreen extends ConsumerWidget {
 
   Future<void> validarCredenciales(BuildContext context, WidgetRef ref) async {
     try {
-      QuerySnapshot querySnapshot = await db.collection("duenos").where("email", isEqualTo: _email).get();
+      QuerySnapshot querySnapshot =
+          await db.collection("duenos").where("email", isEqualTo: _email).get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        Map<String, dynamic>? userData = querySnapshot.docs.first.data() as Map<String, dynamic>?;
+        Map<String, dynamic>? userData =
+            querySnapshot.docs.first.data() as Map<String, dynamic>?;
+
         bool biometriaHabilitada = userData?['biometriaHabilitada'] ?? false;
 
         if (biometriaHabilitada) {
@@ -143,16 +161,26 @@ class LoginScreen extends ConsumerWidget {
         }
 
         if (userData?['email'] == _email && userData?['password'] == _clave) {
+          if (userData?['token'] == null ||
+              userData!['token'].toString().isEmpty) {
+            var prefs = PreferenciasUsuario();
+
+            final datos = await db.collection('duenos').doc(userData?['id']);
+
+            datos.update({'token': prefs.token});
+          }
+
           ref.read(usuarioProvider.notifier).setUsuario(
-            userData?['id'],
-            userData?['nombre'],
-            userData?['apellido'],
-            userData?['email'],
-            userData?['password'],
-            userData?['dni'],
-            userData?['telefono'],
-            userData?['esAdmin'],
-          );
+                userData?['id'],
+                userData?['nombre'],
+                userData?['apellido'],
+                userData?['email'],
+                userData?['password'],
+                userData?['dni'],
+                userData?['telefono'],
+                userData?['token'],
+                userData?['esAdmin'],
+              );
 
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString('authToken', userData?['email']);
@@ -174,7 +202,8 @@ class LoginScreen extends ConsumerWidget {
       bool isBiometricSupported = await auth.isDeviceSupported();
 
       if (!canCheckBiometrics || !isBiometricSupported) {
-        _showErrorSnackbar(context, 'El dispositivo no admite autenticación biométrica.');
+        _showErrorSnackbar(
+            context, 'El dispositivo no admite autenticación biométrica.');
         return;
       }
 

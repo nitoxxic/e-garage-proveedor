@@ -15,22 +15,15 @@ class UsuarioNotifier extends StateNotifier<Usuario> {
           apellido: '',
           dni: '',
           telefono: '',
+          token: '',
           esAdmin: false,
           biometriaHabilitada: false,
         ));
 
   // Método para establecer los datos del usuario
-  void setUsuario(
-    String id,
-    String nombre,
-    String apellido,
-    String email,
-    String password,
-    String dni,
-    String telefono,
-    bool esAdmin,
-    {bool biometriaHabilitada = false}
-  ) {
+  void setUsuario(String id, String nombre, String apellido, String email,
+      String password, String dni, String telefono, String token, bool esAdmin,
+      {bool biometriaHabilitada = false}) {
     state = state.copywith(
       id: id,
       nombre: nombre,
@@ -39,6 +32,7 @@ class UsuarioNotifier extends StateNotifier<Usuario> {
       email: email,
       dni: dni,
       telefono: telefono,
+      token: token,
       esAdmin: esAdmin,
       biometriaHabilitada: biometriaHabilitada,
     );
@@ -54,6 +48,7 @@ class UsuarioNotifier extends StateNotifier<Usuario> {
       apellido: '',
       dni: '',
       telefono: '',
+      token: '',
       esAdmin: false,
       biometriaHabilitada: false,
     );
