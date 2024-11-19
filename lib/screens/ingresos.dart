@@ -19,7 +19,7 @@ class Ingresos extends ConsumerWidget {
     return querySnapshot.docs.map((doc) {
       var data = doc.data();
       return Garage(
-        id: doc.id,
+        id: data['id'],
         nombre: data['nombre'] ?? 'Garage sin nombre',
         direccion: data['direccion'] ?? 'Dirección desconocida',
         lugaresTotales: data['lugaresTotales'] ?? 0,

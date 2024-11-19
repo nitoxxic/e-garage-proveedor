@@ -28,14 +28,14 @@ class AdminHomePage extends ConsumerWidget {
         }),
       ),
       drawer: const MenuAdministrador(),
-      body: Stack(
-        children: [
-          Center(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 const LogoWidget(size: 300, showText: false),
                 const SizedBox(height: 20),
                 const Text(
@@ -53,7 +53,7 @@ class AdminHomePage extends ConsumerWidget {
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 20),
                 OutlinedButton(
                   onPressed: () {
                     context.push('/lista-garages');
@@ -67,14 +67,13 @@ class AdminHomePage extends ConsumerWidget {
                     ),
                   ),
                   child: const Text(
-                    'Mi Garage',
+                    'Mis Garages',
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ),
               ],
             ),
           ),
-        ],
       ),
     );
   }
