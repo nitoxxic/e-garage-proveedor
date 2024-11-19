@@ -1,3 +1,5 @@
+import 'package:e_garage_proveedor/Test/EgresarVehiculo_Test.dart';
+import 'package:e_garage_proveedor/Test/IngresarVehiculo_Test.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/agregarGarage.dart';
 import 'package:go_router/go_router.dart';
@@ -48,6 +50,16 @@ final GoRouter appRouter = GoRouter(
       path: '/agregar-garage',
       name: 'AgregarGarage',
       builder: (context, state) => const AgregarGarage(),
+    ),
+    GoRoute(
+      path: '/Ingresarvehiculo',
+      builder: (context, state) => const Ingresarvehiculo(),
+      name: Ingresarvehiculo.name,
+    ),
+    GoRoute(
+      path: '/Retirarvehiculo',
+      builder: (context, state) => const Retirarvehiculo(),
+      name: Retirarvehiculo.name,
     ),
   ],
 );

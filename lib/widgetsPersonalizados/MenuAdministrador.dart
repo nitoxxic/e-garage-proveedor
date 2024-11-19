@@ -1,3 +1,5 @@
+import 'package:e_garage_proveedor/Test/IngresarVehiculo_Test.dart';
+import 'package:e_garage_proveedor/Test/EgresarVehiculo_Test.dart';
 import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
 import 'package:e_garage_proveedor/screens/EditarDatosAdmin.dart';
 import 'package:e_garage_proveedor/screens/ingresos.dart';
@@ -11,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class MenuAdministrador extends ConsumerWidget {
   const MenuAdministrador({super.key});
 
- Future<void> _logOut(BuildContext context, WidgetRef ref) async {
+  Future<void> _logOut(BuildContext context, WidgetRef ref) async {
     ref.read(usuarioProvider.notifier).clearUsuario();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('authToken');
@@ -34,11 +36,12 @@ class MenuAdministrador extends ConsumerWidget {
               leading: const Icon(Icons.person, size: 40, color: Colors.black),
               title: const Text('Editar Datos', style: TextStyle(fontSize: 18)),
               onTap: () {
-               context.push('/editar-datos');
+                context.push('/editar-datos');
               },
             ),
             ListTile(
-              leading: const Icon(Icons.calendar_today, size: 40, color: Colors.black),
+              leading: const Icon(Icons.calendar_today,
+                  size: 40, color: Colors.black),
               title: const Text('Reservas', style: TextStyle(fontSize: 18)),
               onTap: () {
                 Navigator.push(
@@ -48,8 +51,10 @@ class MenuAdministrador extends ConsumerWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.check_box, size: 40, color: Colors.black),
-              title: const Text('Lugares Disponibles', style: TextStyle(fontSize: 18)),
+              leading:
+                  const Icon(Icons.check_box, size: 40, color: Colors.black),
+              title: const Text('Lugares Disponibles',
+                  style: TextStyle(fontSize: 18)),
               onTap: () {
                 Navigator.push(
                   context,
@@ -58,7 +63,8 @@ class MenuAdministrador extends ConsumerWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.attach_money, size: 40, color: Colors.black),
+              leading:
+                  const Icon(Icons.attach_money, size: 40, color: Colors.black),
               title: const Text('Ingresos', style: TextStyle(fontSize: 18)),
               onTap: () {
                 Navigator.push(
@@ -68,10 +74,30 @@ class MenuAdministrador extends ConsumerWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.bar_chart, size: 40, color: Colors.black),
-              title: const Text('Resumen Mensual', style: TextStyle(fontSize: 18)),
+              leading:
+                  const Icon(Icons.bar_chart, size: 40, color: Colors.black),
+              title:
+                  const Text('Resumen Mensual', style: TextStyle(fontSize: 18)),
               onTap: () {
                 // Navegación a la pantalla de resumen mensual
+              },
+            ),
+            ListTile(
+              leading:
+                  const Icon(Icons.car_rental, size: 40, color: Colors.black),
+              title: const Text('Ingresar Vehiculo',
+                  style: TextStyle(fontSize: 18)),
+              onTap: () {
+                context.goNamed(Ingresarvehiculo.name);
+              },
+            ),
+            ListTile(
+              leading:
+                  const Icon(Icons.car_repair, size: 40, color: Colors.black),
+              title: const Text('Egresar Vehiculo',
+                  style: TextStyle(fontSize: 18)),
+              onTap: () {
+                context.goNamed(Retirarvehiculo.name);
               },
             ),
             ListTile(
