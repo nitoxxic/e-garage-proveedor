@@ -1,30 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
+import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/detalleGarage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
-class LugaresDisponibles extends StatefulWidget {
+class LugaresDisponibles extends ConsumerWidget {
   const LugaresDisponibles({super.key});
 
-  @override
-  _LugaresDisponiblesState createState() => _LugaresDisponiblesState();
-}
-
-class _LugaresDisponiblesState extends State<LugaresDisponibles> {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
-
   // Método para obtener los garages de Firestore
-  Stream<List<Garage>> _getGarages() {
-    return _db.collection('garages').snapshots().map((querySnapshot) {
+  Stream<List<Garage>> _getGarages(String userId) {
+    final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+    return _db
+        .collection('garages')
+        .where('idAdmin', isEqualTo: userId)
+        .snapshots()
+        .map((querySnapshot) {
       return querySnapshot.docs.map((doc) {
-        return Garage.fromFirestore(doc, null); 
+        return Garage.fromFirestore(doc, null);
       }).toList();
     });
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userProvider = ref.watch(usuarioProvider);
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -36,7 +38,7 @@ class _LugaresDisponiblesState extends State<LugaresDisponibles> {
         elevation: 0,
       ),
       body: StreamBuilder<List<Garage>>(
-        stream: _getGarages(),
+        stream: _getGarages(userProvider.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator(color: Colors.white));

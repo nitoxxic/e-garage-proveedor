@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/core/Entities/Reserva.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
@@ -27,7 +29,7 @@ class _ListaReservasState extends State<ListaReservas> {
 
   Future<void> _cargarReservas() async {
     final snapshot = await FirebaseFirestore.instance
-        .collection('reservas')
+        .collection('Reservas')
         .where('garajeId', isEqualTo: widget.garageId)
         .get();
 
@@ -45,7 +47,7 @@ class _ListaReservasState extends State<ListaReservas> {
         final ahora = DateTime.now();
         switch (filtroActual) {
           case 'Último mes':
-            return reserva.startTime.isAfter(ahora.subtract(Duration(days: 30)));
+            return reserva.startTime.isAfter(ahora.subtract(const Duration(days: 30)));
           case 'Activas':
             return reserva.endTime.isAfter(ahora);
           case 'Pasadas':
@@ -66,17 +68,17 @@ class _ListaReservasState extends State<ListaReservas> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1F1F1F), // Fondo oscuro
+      backgroundColor: const Color(0xFF1F1F1F),
       appBar: AppBar(
         leading: Transform.scale(
           scale: 0.7, 
-          child: BackButtonWidget(), 
+          child: const BackButtonWidget(), 
         ),
-        backgroundColor: const Color(0xFF2E2E2E), // Color de fondo del AppBar
-        title: Text(
+        backgroundColor: const Color(0xFF2E2E2E),
+        title: const Text(
           'Lista de Reservas',
           style: TextStyle(
-            fontFamily: 'Roboto', // Tipografía personalizada
+            fontFamily: 'Roboto',
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -98,7 +100,7 @@ class _ListaReservasState extends State<ListaReservas> {
             },
           ),
           PopupMenuButton<String>(
-            icon: Icon(
+            icon: const Icon(
               Icons.filter_list,
               color: Colors.white,
             ),
@@ -131,7 +133,7 @@ class _ListaReservasState extends State<ListaReservas> {
               contentPadding: const EdgeInsets.all(16),
               title: Text(
                 '${reserva.elvehiculo.marca} ${reserva.elvehiculo.modelo}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Roboto',
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

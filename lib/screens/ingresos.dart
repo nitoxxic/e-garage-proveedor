@@ -1,21 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
+import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/ingresosGarage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Ingresos extends StatefulWidget {
-  const Ingresos({super.key});
+class Ingresos extends ConsumerWidget {
+   Ingresos({super.key});
 
-  @override
-  _IngresosState createState() => _IngresosState();
-}
 
-class _IngresosState extends State<Ingresos> {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   // Método para obtener los garages
- Stream<List<Garage>> _getGarages() {
-  return _db.collection('garages').snapshots().map((querySnapshot) {
+ Stream<List<Garage>> _getGarages(String id) {
+  return _db.collection('garages')
+  .where('idAdmin', isEqualTo: id)
+  .snapshots().map((querySnapshot) {
     return querySnapshot.docs.map((doc) {
       var data = doc.data();
       return Garage(
@@ -25,14 +25,16 @@ class _IngresosState extends State<Ingresos> {
         lugaresTotales: data['lugaresTotales'] ?? 0,
          latitude: data['latitude'] ?? 0.0,
          longitude: data['longitude'] ?? 0.0,
-        imageUrl: data['imageUrl'] ?? 'imagen no disponible'
+        imageUrl: data['imageUrl'] ?? 'imagen no disponible',
+        idAdmin: data['idAmin'] ?? 'Garage sin relacion'
       );
     }).toList();
   });
 }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userProvider = ref.watch(usuarioProvider);
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -44,7 +46,7 @@ class _IngresosState extends State<Ingresos> {
         elevation: 0,
       ),
       body: StreamBuilder<List<Garage>>(
-        stream: _getGarages(),
+        stream: _getGarages(userProvider.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator(color: Colors.white));
