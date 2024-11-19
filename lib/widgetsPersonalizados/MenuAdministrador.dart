@@ -1,5 +1,6 @@
 import 'package:e_garage_proveedor/Test/IngresarVehiculo_Test.dart';
 import 'package:e_garage_proveedor/Test/EgresarVehiculo_Test.dart';
+import 'package:e_garage_proveedor/Test/RegistrarPagoEfectivo.dart';
 import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
 import 'package:e_garage_proveedor/screens/EditarDatosAdmin.dart';
 import 'package:e_garage_proveedor/screens/ingresos.dart';
@@ -71,6 +72,14 @@ class MenuAdministrador extends ConsumerWidget {
                   context,
                   MaterialPageRoute(builder: (context) => Ingresos()),
                 );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.wallet, size: 40, color: Colors.black),
+              title:
+                  const Text('Registrar pago', style: TextStyle(fontSize: 18)),
+              onTap: () {
+                context.goNamed(Registrarpagoefectivo.name);
               },
             ),
             ListTile(
