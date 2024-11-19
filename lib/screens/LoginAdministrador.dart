@@ -1,9 +1,11 @@
 import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
+import 'package:e_garage_proveedor/core/router/app_router.dart';
 import 'package:e_garage_proveedor/screens/ListaGarages.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/MenuAdministrador.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/logo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class AdminHomePage extends ConsumerWidget {
   static const String name = "HomeAdmin";
@@ -27,7 +29,7 @@ class AdminHomePage extends ConsumerWidget {
           );
         }),
       ),
-      drawer: const MenuAdministrador(), // Usando el drawer reutilizable
+      drawer: const MenuAdministrador(),
       body: Stack(
         children: [
           Center(
@@ -45,13 +47,18 @@ class AdminHomePage extends ConsumerWidget {
                     color: Colors.white,
                   ),
                 ),
+                const SizedBox(height: 10),
+                Text(
+                  usuario.nombre,
+                  style: const TextStyle(
+                    fontSize: 28,
+                    color: Colors.white,
+                  ),
+                ),
                 const SizedBox(height: 50),
                 OutlinedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ListaGarages()),
-                    );
+                    context.push('/lista-garages');
                   },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.white),

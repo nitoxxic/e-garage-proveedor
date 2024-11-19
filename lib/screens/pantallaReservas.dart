@@ -1,19 +1,25 @@
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
+import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/listaReservas.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
-class PantallaReservas extends StatelessWidget {
-  const PantallaReservas({Key? key}) : super(key: key);
+class PantallaReservas extends ConsumerWidget {
+  const PantallaReservas({super.key});
 
-  Future<List<Garage>> fetchGarages() async {
-    final querySnapshot = await FirebaseFirestore.instance.collection('garages').get();
+  Future<List<Garage>> fetchGarages(userId) async {
+    final querySnapshot = await FirebaseFirestore.instance
+    .collection('garages')
+    .where('idAdmin', isEqualTo: userId)
+    .get();
     return querySnapshot.docs.map((doc) => Garage.fromFirestore(doc, null)).toList();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userProvider = ref.watch(usuarioProvider);
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -21,7 +27,7 @@ class PantallaReservas extends StatelessWidget {
         backgroundColor: Colors.black,
       ),
       body: FutureBuilder<List<Garage>>(
-        future: fetchGarages(),
+        future: fetchGarages(userProvider.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

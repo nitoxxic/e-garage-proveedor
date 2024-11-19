@@ -9,6 +9,7 @@ class Garage {
   double latitude;
   double longitude;
   String imageUrl; // Nueva propiedad para la URL de la imagen
+  String idAdmin;
 
   Garage({
     required this.id,
@@ -18,6 +19,7 @@ class Garage {
     required this.latitude,
     required this.longitude,
     required this.imageUrl,
+    required this.idAdmin,
   }) : lugaresDisponibles = lugaresTotales;
 
   // Método para convertir a Firestore
@@ -31,6 +33,7 @@ class Garage {
       "latitude": latitude,
       "longitude": longitude,
       "imageUrl": imageUrl, // Incluir la imagen si está presente
+      "idAdmin": idAdmin,
     };
   }
 
@@ -48,6 +51,7 @@ class Garage {
       latitude: data?['latitude'] ?? 0.0,
       longitude: data?['longitude'] ?? 0.0,
       imageUrl: data?['imageUrl'] ?? 'imagen no disponible', // Asignar la URL de la imagen si existe
+      idAdmin: data?['idAdmin']
     )..lugaresDisponibles = data?['lugaresDisponibles'] ?? data?['lugaresTotales'];
   }
 
@@ -61,6 +65,7 @@ class Garage {
     double? latitude,
     double? longitude,
     String? imageUrl,
+    String? idAdmin
   }) {
     return Garage(
       id: id ?? this.id,
@@ -70,6 +75,7 @@ class Garage {
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       imageUrl: imageUrl ?? this.imageUrl,
+      idAdmin: idAdmin ?? this.idAdmin,
     )..lugaresDisponibles = lugaresDisponibles ?? this.lugaresDisponibles;
   }
 

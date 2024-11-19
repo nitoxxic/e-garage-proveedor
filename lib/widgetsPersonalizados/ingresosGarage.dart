@@ -1,10 +1,10 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
 import 'package:e_garage_proveedor/core/Entities/Reserva.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/detalleReserva.dart';
 import 'package:flutter/material.dart';
-
-
 
 class IngresosGarage extends StatefulWidget {
   final Garage garage;
@@ -27,23 +27,25 @@ class _IngresosGarageState extends State<IngresosGarage> {
     _reservasStream = _getReservasMensuales(widget.garage.id);
   }
 
-  // Método para obtener las reservas mensuales de un garage específico
   Stream<List<Reserva>> _getReservasMensuales(String garageId) {
     DateTime now = DateTime.now();
+    DateTime startOfMonth = DateTime(now.year, now.month, 1);
+  DateTime endOfMonth = DateTime(now.year, now.month + 1, 1).subtract(const Duration(days: 1));
+    
     return _db
-        .collection('garages')
-        .doc(garageId)
-        .collection('reservas')
-        .where('startTime', isGreaterThanOrEqualTo: DateTime(now.year, now.month, 1))
-        .where('startTime', isLessThanOrEqualTo: DateTime(now.year, now.month + 1, 0))
+        .collection('Reservas')
+        .where('garajeId', isEqualTo: garageId)
+        .where('fechaHoraInicio', isGreaterThanOrEqualTo: startOfMonth)
+        .where('fechaHoraInicio', isLessThanOrEqualTo: endOfMonth)
         .snapshots()
         .map((querySnapshot) {
       List<Reserva> reservas = querySnapshot.docs.map((doc) => Reserva.fromFirestore(doc)).toList();
 
-      // Calcular ingresos y total de reservas
-      ingresosMensuales = reservas.fold(0.0, (total, reserva) => total + reserva.monto);
-      totalReservas = reservas.length;
-
+      setState(() {
+        ingresosMensuales = reservas.fold(0.0, (total, reserva) => total + reserva.monto);
+        totalReservas = reservas.length;
+      });
+      
       return reservas;
     });
   }
@@ -62,13 +64,12 @@ class _IngresosGarageState extends State<IngresosGarage> {
       ),
       body: Column(
         children: [
-          // Resumen de ingresos y reservas mensuales
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Resumen del Mes',
                   style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                 ),
@@ -85,8 +86,6 @@ class _IngresosGarageState extends State<IngresosGarage> {
             ),
           ),
           const Divider(color: Colors.white70),
-          
-          // Lista de reservas
           Expanded(
             child: StreamBuilder<List<Reserva>>(
               stream: _reservasStream,

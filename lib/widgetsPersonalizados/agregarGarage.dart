@@ -1,7 +1,9 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_garage_proveedor/core/Entities/Garage.dart';
+import 'package:e_garage_proveedor/core/Entities/Usuario.dart';
 import 'package:e_garage_proveedor/core/Entities/adminGarage.dart';
 import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
@@ -17,7 +19,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 
 class AgregarGarage extends ConsumerStatefulWidget {
-  static final String name = "AgregarGarage";
+  static const String name = "AgregarGarage";
   const AgregarGarage({super.key});
 
   @override
@@ -121,13 +123,14 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
     }
   }
 
-  Future<void> guardarGarage(bool statusFormulario, String userId) async {
+  Future<void> guardarGarage(bool statusFormulario, Usuario usuario) async {
     if (statusFormulario) {
       try {
         String nombre = _nombreController.text;
         String direccion = _direccionController.text;
         int lugaresTotales = int.tryParse(_lugaresTotalesController.text) ?? 0;
         String imageUrl = _imageUrlController.text;
+        String idAdmin = usuario.id;
 
         if (lugaresTotales <= 0) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -178,16 +181,14 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
           'latitude': latitude,
           'longitude': longitude,
           'imageUrl': imageUrl,
+          'idAdmin': idAdmin
         };
 
         // Guardar el garage en Firestore y obtener su ID
         await db.collection('garages').add(garageData);
 
-        print(
-            '**************************Se deberia haber ejecutado el guardado del garage*******************************');
-
         final relacionAdminGarage =
-            adminGarage(idAdmin: userId, idGarage: docRef.id);
+            adminGarage(idAdmin: idAdmin, idGarage: docRef.id);
 
         await db
             .collection('adminGarage')
@@ -282,10 +283,10 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
                                         fit: BoxFit.cover,
                                       ),
                                     )
-                                  : Column(
+                                  : const Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: const [
+                                      children: [
                                         Icon(Icons.image,
                                             color: Colors.white, size: 50),
                                         SizedBox(height: 10),
@@ -303,8 +304,7 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
                       ElevatedButton(
                         onPressed: _isButtonEnabled
                             ? () => guardarGarage(
-                                _formKey.currentState!.validate(),
-                                userprovider.id)
+                                _formKey.currentState!.validate(), userprovider)
                             : null,
                         child: const Center(child: Text('Agregar Garage')),
                       ),

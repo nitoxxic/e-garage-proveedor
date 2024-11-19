@@ -1,4 +1,5 @@
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/agregarGarage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:e_garage_proveedor/screens/EditarDatosAdmin.dart';
 import 'package:e_garage_proveedor/screens/EditarGarage.dart';
@@ -13,7 +14,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/selectionScreen',
       name: 'SelectionScreen',
-      builder: (context, state) => SelectionScreen(),
+      builder: (context, state) => const SelectionScreen(),
     ),
     GoRoute(
       path: '/login',
@@ -42,6 +43,11 @@ final GoRouter appRouter = GoRouter(
         final garage = state.extra as Garage;
         return EditarGarage(garage: garage);
       },
+    ),
+    GoRoute(
+      path: '/agregar-garage',
+      name: 'AgregarGarage',
+      builder: (context, state) => const AgregarGarage(),
     ),
   ],
 );
