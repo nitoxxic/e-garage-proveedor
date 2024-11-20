@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
 import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/MenuAdministrador.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/detalleGarage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 
 class LugaresDisponibles extends ConsumerWidget {
   const LugaresDisponibles({super.key});
@@ -37,61 +38,71 @@ class LugaresDisponibles extends ConsumerWidget {
         ),
         elevation: 0,
       ),
-      body: StreamBuilder<List<Garage>>(
-        stream: _getGarages(userProvider.id),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: Colors.white));
-          }
+      drawer: const MenuAdministrador(), // Agregando el menú lateral.
+      body: Stack(
+        children: [
+          StreamBuilder<List<Garage>>(
+            stream: _getGarages(userProvider.id),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                    child: CircularProgressIndicator(color: Colors.white));
+              }
 
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                'Error: ${snapshot.error}',
-                style: const TextStyle(color: Colors.red),
-              ),
-            );
-          }
-
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text(
-                'No hay garajes disponibles.',
-                style: TextStyle(color: Colors.white),
-              ),
-            );
-          }
-
-          List<Garage> garages = snapshot.data!;
-
-          return ListView.builder(
-            itemCount: garages.length,
-            itemBuilder: (context, index) {
-              return Card(
-                color: Colors.grey[900],
-                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                child: ListTile(
-                  title: Text(
-                    garages[index].nombre,
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    'Error: ${snapshot.error}',
+                    style: const TextStyle(color: Colors.red),
                   ),
-                  subtitle: Text(
-                    'Lugares disponibles: ${garages[index].lugaresDisponibles}',
-                    style: const TextStyle(color: Colors.white70),
+                );
+              }
+
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'No hay garajes disponibles.',
+                    style: TextStyle(color: Colors.white),
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DetalleGarage(garage: garages[index]),
+                );
+              }
+
+              List<Garage> garages = snapshot.data!;
+
+              return ListView.builder(
+                itemCount: garages.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    color: Colors.grey[900],
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 8, horizontal: 16),
+                    child: ListTile(
+                      title: Text(
+                        garages[index].nombre,
+                        style: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
                       ),
-                    );
-                  },
-                ),
+                      subtitle: Text(
+                        'Lugares disponibles: ${garages[index].lugaresDisponibles}',
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                DetalleGarage(garage: garages[index]),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
               );
             },
-          );
-        },
+          ),
+          BackButtonWidget(), // Agregando el botón atrás.
+        ],
       ),
     );
   }

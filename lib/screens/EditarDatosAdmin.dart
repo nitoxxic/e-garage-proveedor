@@ -96,9 +96,13 @@ class EditarDatosAdmin extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
-          onPressed: () => Scaffold.of(context).openDrawer(),
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu, color: Colors.white),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            );
+          },
         ),
       ),
       drawer: const MenuAdministrador(),
@@ -228,7 +232,7 @@ class EditarDatosAdmin extends ConsumerWidget {
             left: 20,
             child: BackButtonWidget(
               onPressed: () {
-                context.push('/HomeUser');
+                context.push('/LoginAdministrador');
               },
             ),
           ),
@@ -271,12 +275,6 @@ class EditarDatosAdmin extends ConsumerWidget {
         ),
       ),
       onChanged: onChanged,
-    );
-  }
-
-  void _showErrorSnackbar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
   }
 }

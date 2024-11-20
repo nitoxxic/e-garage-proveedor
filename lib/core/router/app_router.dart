@@ -67,5 +67,10 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const Registrarpagoefectivo(),
       name: Registrarpagoefectivo.name,
     ),
+    GoRoute(
+      path: '/LoginAdministrador',
+      builder: (context, state) => const AdminHomePage(),
+      name: AdminHomePage.name,
+    ),
   ],
 );
