@@ -117,13 +117,16 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        centerTitle: true,
         backgroundColor: Colors.black,
-        title: const Text(
-          'Registrar pago \n'
-          'Ingrese la patente',
-          style: TextStyle(color: Colors.white),
-        ),
+        elevation: 0,
+        leading: Builder(builder: (context) {
+          return IconButton(
+            icon: const Icon(Icons.menu, color: Colors.white),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          );
+        }),
       ),
       drawer: const MenuAdministrador(),
       body: LayoutBuilder(
@@ -138,6 +141,16 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      const Text(
+                        'Ingrese la patente para registrar el pago',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 20),
+
                       // Input para la patente del vehículo
                       TextFormField(
                         style: const TextStyle(color: Colors.white),
