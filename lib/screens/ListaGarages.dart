@@ -1,14 +1,12 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_garage_proveedor/core/Entities/Garage.dart';
-import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
-import 'package:e_garage_proveedor/core/router/app_router.dart';
-import 'package:e_garage_proveedor/widgetsPersonalizados/agregarGarage.dart';
-import 'package:e_garage_proveedor/widgetsPersonalizados/detalleGarage.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
+import 'package:e_garage_proveedor/core/Entities/Garage.dart';
+import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/detalleGarage.dart';
+
 
 class ListaGarages extends ConsumerWidget {
   const ListaGarages({super.key});
@@ -30,7 +28,7 @@ class ListaGarages extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userProvider = ref.watch(usuarioProvider); // Obtenemos el usuario actual
+    final userProvider = ref.watch(usuarioProvider);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -42,66 +40,74 @@ class ListaGarages extends ConsumerWidget {
         ),
         elevation: 0,
       ),
-      body: StreamBuilder<List<Garage>>(
-              stream: _getGarages(userProvider.id),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                      child: CircularProgressIndicator(color: Colors.white));
-                }
-
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      'Error: ${snapshot.error}',
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  );
-                }
-
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'No hay garajes disponibles.',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  );
-                }
-
-                List<Garage> garages = snapshot.data!;
-
-                return ListView.builder(
-                  itemCount: garages.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      color: Colors.grey[900],
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 16),
-                      child: ListTile(
-                        title: Text(
-                          garages[index].nombre,
-                          style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(
-                          garages[index].direccion,
-                          style: const TextStyle(color: Colors.white70),
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  DetalleGarage(garage: garages[index]),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
+      body: Stack(
+        children: [
+          // Contenido principal
+          StreamBuilder<List<Garage>>(
+            stream: _getGarages(userProvider.id),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(color: Colors.white),
                 );
-              },
-            ),
+              }
+
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    'Error: ${snapshot.error}',
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                );
+              }
+
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'No hay garajes disponibles.',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                );
+              }
+
+              List<Garage> garages = snapshot.data!;
+
+              return ListView.builder(
+                itemCount: garages.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    color: Colors.grey[900],
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    child: ListTile(
+                      title: Text(
+                        garages[index].nombre,
+                        style: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        garages[index].direccion,
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                DetalleGarage(garage: garages[index]),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+
+          const BackButtonWidget(),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color.fromARGB(255, 128, 131, 136),
         onPressed: () {

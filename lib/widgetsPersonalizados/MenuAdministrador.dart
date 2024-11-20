@@ -83,15 +83,6 @@ class MenuAdministrador extends ConsumerWidget {
             ),
             ListTile(
               leading:
-                  const Icon(Icons.bar_chart, size: 40, color: Colors.black),
-              title:
-                  const Text('Resumen Mensual', style: TextStyle(fontSize: 18)),
-              onTap: () {
-                // Navegación a la pantalla de resumen mensual
-              },
-            ),
-            ListTile(
-              leading:
                   const Icon(Icons.car_rental, size: 40, color: Colors.black),
               title: const Text('Ingresar Vehiculo',
                   style: TextStyle(fontSize: 18)),

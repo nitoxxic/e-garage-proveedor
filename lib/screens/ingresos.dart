@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
 import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
-import 'package:e_garage_proveedor/widgetsPersonalizados/ingresosGarage.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/MenuAdministrador.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/ingresosGarage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -27,7 +27,6 @@ class Ingresos extends ConsumerWidget {
             lugaresTotales: data['lugaresTotales'] ?? 0,
             latitude: data['latitude'] ?? 0.0,
             longitude: data['longitude'] ?? 0.0,
-            imageUrl: data['imageUrl'] ?? 'imagen no disponible',
             idAdmin: data['idAmin'] ?? 'Garage sin relacion');
       }).toList();
     });
@@ -80,121 +79,130 @@ class Ingresos extends ConsumerWidget {
         ),
         elevation: 0,
       ),
-      drawer: const MenuAdministrador(), // Menú lateral
-      body: Column(
+      drawer: const MenuAdministrador(),
+      body: Stack(
         children: [
-          FutureBuilder<Map<String, dynamic>>(
-            future: _calcularIngresosTotales(userProvider.id),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Center(
-                    child: CircularProgressIndicator(color: Colors.white),
-                  ),
-                );
-              }
-
-              if (snapshot.hasError) {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Error al calcular ingresos: ${snapshot.error}',
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                );
-              }
-
-              double ingresosTotales = snapshot.data?['ingresosTotales'] ?? 0.0;
-              int totalReservas = snapshot.data?['totalReservas'] ?? 0;
-
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Ingresos Totales del Mes: \$${ingresosTotales.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+          Column(
+            children: [
+              FutureBuilder<Map<String, dynamic>>(
+                future: _calcularIngresosTotales(userProvider.id),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Center(
+                        child: CircularProgressIndicator(color: Colors.white),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Total de Reservas del Mes: $totalReservas',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+                    );
+                  }
+
+                  if (snapshot.hasError) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'Error al calcular ingresos: ${snapshot.error}',
+                        style: const TextStyle(color: Colors.red),
                       ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-          Expanded(
-            child: StreamBuilder<List<Garage>>(
-              stream: _getGarages(userProvider.id),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                      child: CircularProgressIndicator(color: Colors.white));
-                }
+                    );
+                  }
 
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      'Error: ${snapshot.error}',
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  );
-                }
+                  double ingresosTotales =
+                      snapshot.data?['ingresosTotales'] ?? 0.0;
+                  int totalReservas = snapshot.data?['totalReservas'] ?? 0;
 
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'No hay garajes disponibles.',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  );
-                }
-
-                List<Garage> garages = snapshot.data!;
-
-                return ListView.builder(
-                  itemCount: garages.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      color: Colors.grey[900],
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 16),
-                      child: ListTile(
-                        title: Text(
-                          garages[index].nombre,
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Ingresos Totales del Mes: \$${ingresosTotales.toStringAsFixed(2)}',
                           style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        onTap: () {
-                          Navigator.push(
+                        const SizedBox(height: 8),
+                        Text(
+                          'Total de Reservas del Mes: $totalReservas',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              Expanded(
+                child: StreamBuilder<List<Garage>>(
+                  stream: _getGarages(userProvider.id),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                          child:
+                              CircularProgressIndicator(color: Colors.white));
+                    }
+
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          'Error: ${snapshot.error}',
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      );
+                    }
+
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          'No hay garajes disponibles.',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      );
+                    }
+
+                    List<Garage> garages = snapshot.data!;
+
+                    return ListView.builder(
+                      itemCount: garages.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          color: Colors.grey[900],
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 16),
+                          child: ListTile(
+                            title: Text(
+                              garages[index].nombre,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            onTap: () {
+                              Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  IngresosGarage(garage: garages[index]),
-                            ),
-                          );
-                        },
-                      ),
+                                  IngresosGarage(garage: garages[index])));
+                            },
+                          ),
+                        );
+                      },
                     );
                   },
-                );
-              },
-            ),
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            bottom: 16,
+            left: 16,
+            child: BackButtonWidget(),
           ),
         ],
       ),
-      bottomNavigationBar: const BackButtonWidget(),
     );
   }
 }

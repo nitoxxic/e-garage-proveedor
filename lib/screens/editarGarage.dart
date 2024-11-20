@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/detalleGarage.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/input_text_login.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/logo.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,6 @@ class _EditarGarageState extends State<EditarGarage> {
   late TextEditingController direccionController;
   late TextEditingController lugaresTotalesController;
   late TextEditingController lugaresDisponiblesController;
-  String? _imagenUrl; // URL de la imagen seleccionada
 
   @override
   void initState() {
@@ -33,7 +33,6 @@ class _EditarGarageState extends State<EditarGarage> {
         TextEditingController(text: widget.garage.lugaresTotales.toString());
     lugaresDisponiblesController = TextEditingController(
         text: widget.garage.lugaresDisponibles.toString());
-    _imagenUrl = widget.garage.imageUrl; // Inicializar con la imagen existente
   }
 
   @override
@@ -43,15 +42,6 @@ class _EditarGarageState extends State<EditarGarage> {
     lugaresTotalesController.dispose();
     lugaresDisponiblesController.dispose();
     super.dispose();
-  }
-
-  // Función para seleccionar imagen
-  Future<void> _seleccionarImagen() async {
-    // Aquí puedes agregar lógica para seleccionar una imagen (por ejemplo, usando un paquete como image_picker)
-    // Por ahora, simulemos que se seleccionó una imagen:
-    setState(() {
-      _imagenUrl = "https://example.com/nueva-imagen.jpg"; // URL de ejemplo
-    });
   }
 
   // Función para obtener coordenadas usando Nominatim
@@ -95,7 +85,6 @@ class _EditarGarageState extends State<EditarGarage> {
 
   Future<void> _guardarCambios() async {
     final db = FirebaseFirestore.instance;
-
     try {
       // Validar lugares totales y disponibles
       int lugaresTotales = int.parse(lugaresTotalesController.text);
@@ -104,15 +93,15 @@ class _EditarGarageState extends State<EditarGarage> {
       if (lugaresTotales <= 0 || lugaresDisponibles < 0) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text(
-                  'Los lugares totales deben ser mayores a 0 y los disponibles no pueden ser negativos.')),
+            content: Text(
+                'Los lugares totales deben ser mayores a 0 y los disponibles no pueden ser negativos.'),
+          ),
         );
         return;
       }
 
       // Obtener coordenadas actualizadas si la dirección cambia
-      LatLng? coordenadas =
-          await obtenerCoordenadasDesdeDireccion(direccionController.text);
+      LatLng? coordenadas = await obtenerCoordenadasDesdeDireccion(direccionController.text);
 
       if (coordenadas == null) {
         return; // Si no se obtienen coordenadas, no continuar
@@ -128,13 +117,30 @@ class _EditarGarageState extends State<EditarGarage> {
         'lugaresDisponibles': lugaresDisponibles,
         'latitude': coordenadas.latitude,
         'longitude': coordenadas.longitude,
-        'imagenUrl': _imagenUrl, // Actualizar la URL de la imagen
       });
+
+      // Crear un nuevo objeto Garage con los datos actualizados
+      final updatedGarage = widget.garage.copyWith(
+        nombre: nombreController.text,
+        direccion: direccionController.text,
+        lugaresTotales: lugaresTotales,
+        lugaresDisponibles: lugaresDisponibles,
+        latitude: coordenadas.latitude,
+        longitude: coordenadas.longitude,
+      );
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Datos guardados exitosamente.')),
       );
-      Navigator.of(context).pop();
+
+      // Reemplazar la pantalla con los datos actualizados
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DetalleGarage(garage: updatedGarage),
+        ),
+      );
+
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al guardar cambios: $e')),
@@ -196,23 +202,16 @@ class _EditarGarageState extends State<EditarGarage> {
                   controller: lugaresDisponiblesController,
                 ),
                 const SizedBox(height: 20),
-                Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: _seleccionarImagen,
-                      child: const Text('Seleccionar Imagen'),
-                    ),
-                    const SizedBox(width: 10),
-                    if (_imagenUrl != null)
-                      Text(
-                        'Imagen seleccionada',
-                        style: TextStyle(color: Colors.green),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: _guardarCambios,
+                  onPressed: () {
+                 //   setState(() {
+                  //   nombreController.text = nombreController.text;
+                  //    direccionController.text = direccionController.text;
+                  //    lugaresTotalesController.text = lugaresTotalesController.text;
+                  //    lugaresDisponiblesController.text = lugaresDisponiblesController.text;
+                  //  });
+                    _guardarCambios();
+                  },
                   child: const Center(child: Text('Guardar Cambios')),
                 ),
               ],

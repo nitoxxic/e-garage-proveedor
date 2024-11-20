@@ -16,12 +16,22 @@ class InputTextLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      style: const TextStyle(color: Colors.white), // Texto ingresado en blanco
       decoration: InputDecoration(
         hintText: hintText,
+        hintStyle: const TextStyle(color: Colors.grey), // Hint en gris
         prefixIcon: icon,
-        border: OutlineInputBorder(),
+        filled: true,
+        fillColor: Colors.black, // Fondo del campo de texto
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.grey), // Borde habilitado en gris
+          borderRadius: BorderRadius.circular(8),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.white), // Borde enfocado en blanco
+          borderRadius: BorderRadius.circular(8),
+        ),
       ),
     );
   }
 }
-

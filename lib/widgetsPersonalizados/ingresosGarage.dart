@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
 import 'package:e_garage_proveedor/core/Entities/Reserva.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/detalleReserva.dart';
 import 'package:flutter/material.dart';
 
@@ -65,95 +66,107 @@ class _IngresosGarageState extends State<IngresosGarage> {
         ),
         elevation: 0,
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Resumen del Mes',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Total de Reservas: $totalReservas',
-                  style: const TextStyle(color: Colors.white70, fontSize: 16),
-                ),
-                Text(
-                  'Ingresos Totales: \$${ingresosMensuales.toStringAsFixed(2)}',
-                  style: const TextStyle(color: Colors.white70, fontSize: 16),
-                ),
-              ],
-            ),
-          ),
-          const Divider(color: Colors.white70),
-          Expanded(
-            child: StreamBuilder<List<Reserva>>(
-              stream: _reservasStream,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                      child: CircularProgressIndicator(color: Colors.white));
-                }
-
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      'Error: ${snapshot.error}',
-                      style: const TextStyle(color: Colors.red),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Resumen del Mes',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
                     ),
-                  );
-                }
-
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'No hay reservas para este mes.',
-                      style: TextStyle(color: Colors.white),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Total de Reservas: $totalReservas',
+                      style: const TextStyle(color: Colors.white70, fontSize: 16),
                     ),
-                  );
-                }
+                    Text(
+                      'Ingresos Totales: \$${ingresosMensuales.toStringAsFixed(2)}',
+                      style: const TextStyle(color: Colors.white70, fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(color: Colors.white70),
+              Expanded(
+                child: StreamBuilder<List<Reserva>>(
+                  stream: _reservasStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                          child: CircularProgressIndicator(color: Colors.white));
+                    }
 
-                List<Reserva> reservas = snapshot.data!;
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          'Error: ${snapshot.error}',
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      );
+                    }
 
-                return ListView.builder(
-                  itemCount: reservas.length,
-                  itemBuilder: (context, index) {
-                    Reserva reserva = reservas[index];
-                    return Card(
-                      color: Colors.grey[900],
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 16),
-                      child: ListTile(
-                        title: Text(
-                          'Reserva ${index + 1}',
-                          style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          'No hay reservas para este mes.',
+                          style: TextStyle(color: Colors.white),
                         ),
-                        subtitle: Text(
-                          'Monto: \$${reserva.monto.toStringAsFixed(2)}\n'
-                          'Pago: ${reserva.estaPago ? 'Si' : 'No'}',
-                          style: const TextStyle(color: Colors.white70),
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  DetalleReserva(reserva: reserva),
+                      );
+                    }
+
+                    List<Reserva> reservas = snapshot.data!;
+
+                    return ListView.builder(
+                      itemCount: reservas.length,
+                      itemBuilder: (context, index) {
+                        Reserva reserva = reservas[index];
+                        return Card(
+                          color: Colors.grey[900],
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 16),
+                          child: ListTile(
+                            title: Text(
+                              'Reserva ${index + 1}',
+                              style: const TextStyle(
+                                  color: Colors.white, fontWeight: FontWeight.bold),
                             ),
-                          );
-                        },
-                      ),
+                            subtitle: Text(
+                              'Monto: \$${reserva.monto.toStringAsFixed(2)}\n'
+                              'Pago: ${reserva.estaPago ? 'Si' : 'No'}',
+                              style: const TextStyle(color: Colors.white70),
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      DetalleReserva(reserva: reserva),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
                     );
                   },
-                );
-              },
+                ),
+              ),
+            ],
+          ),
+          // Aquí es donde aplicamos el BackButtonWidget en la parte inferior izquierda
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: BackButtonWidget(), // Utiliza tu widget personalizado aquí
             ),
           ),
         ],

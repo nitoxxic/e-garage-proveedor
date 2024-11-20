@@ -8,7 +8,6 @@ class Garage {
   int lugaresDisponibles;
   double latitude;
   double longitude;
-  String imageUrl; // Nueva propiedad para la URL de la imagen
   String idAdmin;
 
   Garage({
@@ -18,7 +17,6 @@ class Garage {
     required this.lugaresTotales,
     required this.latitude,
     required this.longitude,
-    required this.imageUrl,
     required this.idAdmin,
   }) : lugaresDisponibles = lugaresTotales;
 
@@ -32,7 +30,6 @@ class Garage {
       "lugaresDisponibles": lugaresDisponibles,
       "latitude": latitude,
       "longitude": longitude,
-      "imageUrl": imageUrl, // Incluir la imagen si está presente
       "idAdmin": idAdmin,
     };
   }
@@ -50,7 +47,6 @@ class Garage {
       lugaresTotales: data?['lugaresTotales'],
       latitude: data?['latitude'] ?? 0.0,
       longitude: data?['longitude'] ?? 0.0,
-      imageUrl: data?['imageUrl'] ?? 'imagen no disponible', // Asignar la URL de la imagen si existe
       idAdmin: data?['idAdmin']
     )..lugaresDisponibles = data?['lugaresDisponibles'] ?? data?['lugaresTotales'];
   }
@@ -64,7 +60,6 @@ class Garage {
     int? lugaresDisponibles,
     double? latitude,
     double? longitude,
-    String? imageUrl,
     String? idAdmin
   }) {
     return Garage(
@@ -74,7 +69,6 @@ class Garage {
       lugaresTotales: lugaresTotales ?? this.lugaresTotales,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
-      imageUrl: imageUrl ?? this.imageUrl,
       idAdmin: idAdmin ?? this.idAdmin,
     )..lugaresDisponibles = lugaresDisponibles ?? this.lugaresDisponibles;
   }

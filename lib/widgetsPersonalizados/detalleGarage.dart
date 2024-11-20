@@ -49,7 +49,7 @@ class _DetalleGarageState extends State<DetalleGarage> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Ubicación:',
+                  'Dirección:',
                   style: TextStyle(
                     color: Colors.white70,
                     fontSize: 16,
@@ -95,7 +95,6 @@ class _DetalleGarageState extends State<DetalleGarage> {
               ],
             ),
           ),
-          // Botón atrás añadido al Stack
           const BackButtonWidget(),
         ],
       ),

@@ -14,8 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as path;
-import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 
 class AgregarGarage extends ConsumerStatefulWidget {
@@ -31,13 +29,10 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
   final TextEditingController _direccionController = TextEditingController();
   final TextEditingController _lugaresTotalesController =
       TextEditingController();
-  final TextEditingController _imageUrlController = TextEditingController();
   final FocusNode _direccionFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   bool _isButtonEnabled = false;
   final db = FirebaseFirestore.instance;
-
-  File? _selectedImage;
 
   @override
   void initState() {
@@ -108,28 +103,12 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
     }
   }*/
 
-  Future<String?> _uploadImage(File image) async {
-    try {
-      String fileName = path.basename(image.path);
-      final ref =
-          FirebaseStorage.instance.ref().child('garage_images/$fileName');
-      await ref.putFile(image);
-      return await ref.getDownloadURL();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al cargar la imagen: $e')),
-      );
-      return null;
-    }
-  }
-
   Future<void> guardarGarage(bool statusFormulario, Usuario usuario) async {
     if (statusFormulario) {
       try {
         String nombre = _nombreController.text;
         String direccion = _direccionController.text;
         int lugaresTotales = int.tryParse(_lugaresTotalesController.text) ?? 0;
-        String imageUrl = _imageUrlController.text;
         String idAdmin = usuario.id;
 
         if (lugaresTotales <= 0) {
@@ -180,7 +159,6 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
           'lugaresTotales': lugaresTotales,
           'latitude': latitude,
           'longitude': longitude,
-          'imageUrl': imageUrl,
           'idAdmin': idAdmin
         };
 
@@ -254,51 +232,6 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
                         icon: const Icon(Icons.add_location_alt,
                             color: Colors.white),
                         controller: _lugaresTotalesController,
-                      ),
-                      const SizedBox(height: 20),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Imagen',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                          const SizedBox(height: 10),
-                          GestureDetector(
-                            //  onTap: _pickImage,
-                            child: Container(
-                              height: 150,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[800],
-                                borderRadius: BorderRadius.circular(10),
-                                border:
-                                    Border.all(color: Colors.white, width: 1),
-                              ),
-                              child: _selectedImage != null
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.file(
-                                        _selectedImage!,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )
-                                  : const Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.image,
-                                            color: Colors.white, size: 50),
-                                        SizedBox(height: 10),
-                                        Text(
-                                          'Seleccionar Imagen',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                            ),
-                          ),
-                        ],
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
