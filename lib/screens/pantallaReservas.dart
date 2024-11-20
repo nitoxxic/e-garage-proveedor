@@ -5,16 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 class PantallaReservas extends ConsumerWidget {
   const PantallaReservas({super.key});
 
   Future<List<Garage>> fetchGarages(userId) async {
     final querySnapshot = await FirebaseFirestore.instance
-    .collection('garages')
-    .where('idAdmin', isEqualTo: userId)
-    .get();
-    return querySnapshot.docs.map((doc) => Garage.fromFirestore(doc, null)).toList();
+        .collection('garages')
+        .where('idAdmin', isEqualTo: userId)
+        .get();
+    return querySnapshot.docs
+        .map((doc) => Garage.fromFirestore(doc, null))
+        .toList();
   }
 
   @override
@@ -23,7 +24,10 @@ class PantallaReservas extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Mis Garages'),
+        title: const Text(
+          'Mis Garages',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.black,
       ),
       body: FutureBuilder<List<Garage>>(
@@ -32,9 +36,13 @@ class PantallaReservas extends ConsumerWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}', style: const TextStyle(color: Colors.white)));
+            return Center(
+                child: Text('Error: ${snapshot.error}',
+                    style: const TextStyle(color: Colors.white)));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No tienes garages registrados.', style: TextStyle(color: Colors.white)));
+            return const Center(
+                child: Text('No tienes garages registrados.',
+                    style: TextStyle(color: Colors.white)));
           }
 
           final garages = snapshot.data!;
@@ -47,13 +55,15 @@ class PantallaReservas extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ListaReservas(garageId: garage.garageId),
+                      builder: (context) =>
+                          ListaReservas(garageId: garage.garageId),
                     ),
                   );
                 },
                 child: Card(
                   color: Colors.grey[900],
-                  margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 16.0),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
@@ -61,17 +71,22 @@ class PantallaReservas extends ConsumerWidget {
                       children: [
                         Text(
                           garage.nombre,
-                          style: const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Dirección: ${garage.direccion}',
-                          style: const TextStyle(fontSize: 16, color: Colors.white),
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.white),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Lugares Disponibles: ${garage.lugaresDisponibles} / ${garage.lugaresTotales}',
-                          style: const TextStyle(fontSize: 16, color: Colors.white),
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.white),
                         ),
                       ],
                     ),

@@ -31,47 +31,49 @@ class AdminHomePage extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 20),
-              const LogoWidget(size: 300, showText: false),
-              const SizedBox(height: 20),
-              const Text(
-                'BIENVENIDO',
-                style: TextStyle(
-                  fontSize: 32,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                usuario.nombre,
-                style: const TextStyle(
-                  fontSize: 28,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 20),
-              OutlinedButton(
-                onPressed: () {
-                  context.push('/lista-garages');
-                },
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Colors.white),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20),
+                const LogoWidget(size: 300, showText: false),
+                const SizedBox(height: 20),
+                const Text(
+                  'BIENVENIDO',
+                  style: TextStyle(
+                    fontSize: 32,
+                    color: Colors.white,
                   ),
                 ),
-                child: const Text(
-                  'Mis Garages',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+                const SizedBox(height: 10),
+                Text(
+                  usuario.nombre,
+                  style: const TextStyle(
+                    fontSize: 28,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+                OutlinedButton(
+                  onPressed: () {
+                    context.push('/lista-garages');
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Colors.white),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 20),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: const Text(
+                    'Mis Garages',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

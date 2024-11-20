@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/screens/LoginAdministrador.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/MenuAdministrador.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/dialog_box.dart';
 import 'package:flutter/material.dart';
 
@@ -114,11 +115,17 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Registrar pago \n'
-            'Ingrese la patente'),
+        backgroundColor: Colors.black,
+        title: const Text(
+          'Registrar pago \n'
+          'Ingrese la patente',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
+      drawer: const MenuAdministrador(),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
@@ -133,9 +140,11 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
                     children: [
                       // Input para la patente del vehículo
                       TextFormField(
+                        style: const TextStyle(color: Colors.white),
                         controller: _patenteController,
                         focusNode: _patenteFocusNode,
                         decoration: const InputDecoration(
+                          labelStyle: TextStyle(color: Colors.white),
                           labelText: 'Patente',
                           border: OutlineInputBorder(),
                         ),

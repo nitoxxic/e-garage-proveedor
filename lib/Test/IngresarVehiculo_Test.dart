@@ -116,15 +116,19 @@ class _IngresarvehiculoState extends State<Ingresarvehiculo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
+        backgroundColor: Colors.black,
         centerTitle: true,
-        title: const Text('Ingresar vehiculo'),
+        title: const Text(
+          'Ingresar vehiculo',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       drawer: const MenuAdministrador(),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(30.0),
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: IntrinsicHeight(
@@ -135,12 +139,13 @@ class _IngresarvehiculoState extends State<Ingresarvehiculo> {
                     children: [
                       // Input para la patente del vehículo
                       TextFormField(
+                        style: const TextStyle(color: Colors.white),
                         controller: _patenteController,
                         focusNode: _patenteFocusNode,
                         decoration: const InputDecoration(
-                          labelText: 'Patente',
-                          border: OutlineInputBorder(),
-                        ),
+                            labelText: 'Patente',
+                            border: OutlineInputBorder(),
+                            labelStyle: TextStyle(color: Colors.white)),
                         validator: _validatePatente,
                       ),
 

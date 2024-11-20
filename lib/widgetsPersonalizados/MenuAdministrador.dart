@@ -2,7 +2,6 @@ import 'package:e_garage_proveedor/Test/IngresarVehiculo_Test.dart';
 import 'package:e_garage_proveedor/Test/EgresarVehiculo_Test.dart';
 import 'package:e_garage_proveedor/Test/RegistrarPagoEfectivo.dart';
 import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
-import 'package:e_garage_proveedor/screens/EditarDatosAdmin.dart';
 import 'package:e_garage_proveedor/screens/ingresos.dart';
 import 'package:e_garage_proveedor/screens/pantallaReservas.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/lugaresDisponibles.dart';

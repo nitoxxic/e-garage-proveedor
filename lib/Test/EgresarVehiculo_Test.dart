@@ -132,9 +132,14 @@ class _RetirarVehiculovehiculoState extends State<Retirarvehiculo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Retirar vehiculo'),
+        title: const Text(
+          'Retirar vehiculo',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.black,
       ),
       drawer: const MenuAdministrador(),
       body: LayoutBuilder(
@@ -156,6 +161,7 @@ class _RetirarVehiculovehiculoState extends State<Retirarvehiculo> {
                         decoration: const InputDecoration(
                           labelText: 'Patente',
                           border: OutlineInputBorder(),
+                          labelStyle: TextStyle(color: Colors.white),
                         ),
                         validator: _validatePatente,
                       ),
