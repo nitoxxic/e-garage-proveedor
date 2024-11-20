@@ -1,14 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/BiometriaService.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/MenuAdministrador.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/logo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:local_auth/local_auth.dart';
 
 class EditarDatosAdmin extends ConsumerWidget {
+  static final String name = "editarDatos";
   const EditarDatosAdmin({super.key});
 
   Future<void> _eliminarCuenta(BuildContext context, WidgetRef ref) async {
@@ -37,61 +38,43 @@ class EditarDatosAdmin extends ConsumerWidget {
 
     if (confirmacion == true) {
       try {
+        QuerySnapshot vehiculosSnapshot = await db
+            .collection('Vehiculos')
+            .where('userId', isEqualTo: usuario.id)
+            .get();
+
+        for (DocumentSnapshot vehiculoDoc in vehiculosSnapshot.docs) {
+          await vehiculoDoc.reference.delete();
+        }
+
         await db.collection('users').doc(usuario.id).delete();
+
         ref.read(usuarioProvider.notifier).clearUsuario();
-        context.go('/selection');
+
+        context.goNamed('SelectionScreen');
       } catch (e) {
-        _showErrorSnackbar(context, 'Error al eliminar cuenta: $e');
-      }
-    }
-  }
-
-  Future<void> _habilitarBiometria(BuildContext context, WidgetRef ref) async {
-    final usuario = ref.read(usuarioProvider);
-    final db = FirebaseFirestore.instance;
-    final LocalAuthentication auth = LocalAuthentication();
-
-    try {
-      bool canCheckBiometrics = await auth.canCheckBiometrics;
-      bool isBiometricSupported = await auth.isDeviceSupported();
-
-      if (!canCheckBiometrics || !isBiometricSupported) {
-        _showErrorSnackbar(context, 'El dispositivo no admite autenticación biométrica.');
-        return;
-      }
-
-      bool authenticated = await auth.authenticate(
-        localizedReason: 'Autentícate para habilitar el desbloqueo biométrico',
-        options: const AuthenticationOptions(
-          biometricOnly: true,
-          useErrorDialogs: true,
-          stickyAuth: true,
-        ),
-      );
-
-      if (authenticated) {
-        await db.collection('users').doc(usuario.id).update({
-          'biometriaHabilitada': true,
-        });
-
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Desbloqueo biométrico habilitado.')),
+          SnackBar(content: Text('Error al eliminar cuenta: $e')),
         );
       }
-    } catch (e) {
-      _showErrorSnackbar(context, 'Error al habilitar la biometría: $e');
     }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final usuario = ref.watch(usuarioProvider);
+    final BiometriaService biometriaService = BiometriaService();
 
-    final nombreController = TextEditingController(text: usuario.nombre);
-    final apellidoController = TextEditingController(text: usuario.apellido);
-    final emailController = TextEditingController(text: usuario.email);
-    final passwordController = TextEditingController(text: usuario.password);
-    final confirmPasswordController = TextEditingController();
+    final TextEditingController nombreController =
+        TextEditingController(text: usuario.nombre);
+    final TextEditingController apellidoController =
+        TextEditingController(text: usuario.apellido);
+    final TextEditingController emailController =
+        TextEditingController(text: usuario.email);
+    final TextEditingController passwordController =
+        TextEditingController(text: usuario.password);
+    final TextEditingController confirmPasswordController =
+        TextEditingController();
 
     bool isPasswordValid = false;
 
@@ -101,6 +84,11 @@ class EditarDatosAdmin extends ConsumerWidget {
       final hasDigit = password.contains(RegExp(r'\d'));
       final hasMinLength = password.length >= 8;
       return hasUppercase && hasLowercase && hasDigit && hasMinLength;
+    }
+
+    bool validateEmail(String email) {
+      final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+      return emailRegex.hasMatch(email);
     }
 
     return Scaffold(
@@ -149,31 +137,88 @@ class EditarDatosAdmin extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  _buildPasswordField('Confirmar Contraseña', confirmPasswordController, null),
+                  _buildPasswordField(
+                      'Confirmar Contraseña', confirmPasswordController, null),
                   const SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: () {
-                      if (isPasswordValid && passwordController.text == confirmPasswordController.text) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Datos guardados exitosamente.')),
-                        );
+                    onPressed: () async {
+                      if (isPasswordValid &&
+                          passwordController.text ==
+                              confirmPasswordController.text) {
+                        final db = FirebaseFirestore.instance;
+                        final usuario = ref.read(usuarioProvider);
+                        try {
+                          await db.collection('duenos').doc(usuario.id).update({
+                            'nombre': nombreController.text,
+                            'apellido': apellidoController.text,
+                            'email': emailController.text,
+                            'password': passwordController.text,
+                          });
+                          ref.read(usuarioProvider.notifier).setUsuario(
+                                usuario.id,
+                                nombreController.text,
+                                apellidoController.text,
+                                emailController.text,
+                                passwordController.text,
+                                usuario.dni,
+                                usuario.telefono,
+                                usuario.token!,
+                                usuario.esAdmin,
+                              );
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Datos guardados exitosamente.')),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('Error al guardar cambios: $e')),
+                          );
+                        }
                       } else {
-                        _showErrorSnackbar(context, 'Verifique la contraseña y su confirmación.');
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text(
+                              'Verifique la contraseña y su confirmación.'),
+                        ));
                       }
                     },
                     child: const Text("Guardar Cambios"),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () => _eliminarCuenta(context, ref),
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                    child: const Text("Eliminar cuenta"),
+                    onPressed: () {
+                      biometriaService.registrarHuella(
+                        context,
+                        usuario.id,
+                        {
+                          'email': emailController.text,
+                          'password': passwordController.text,
+                        },
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 15),
+                    ),
+                    child: const Text(
+                      "Habilitar Huella Digital",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
                   ),
+                  const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () => _habilitarBiometria(context, ref),
-                    style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 250, 252, 253)),
-                    child: const Text("Habilitar desbloqueo biométrico"),
-                  ),
+                    onPressed: () => _eliminarCuenta(context, ref),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(191, 152, 12, 2),
+                    ),
+                    child: const Text(
+                      "Eliminar cuenta",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -183,7 +228,7 @@ class EditarDatosAdmin extends ConsumerWidget {
             left: 20,
             child: BackButtonWidget(
               onPressed: () {
-                context.pop();
+                context.push('/HomeUser');
               },
             ),
           ),
@@ -209,7 +254,8 @@ class EditarDatosAdmin extends ConsumerWidget {
     );
   }
 
-  Widget _buildPasswordField(String label, TextEditingController controller, ValueChanged<String>? onChanged) {
+  Widget _buildPasswordField(String label, TextEditingController controller,
+      ValueChanged<String>? onChanged) {
     return TextField(
       controller: controller,
       obscureText: true,
