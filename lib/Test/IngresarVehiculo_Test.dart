@@ -120,10 +120,6 @@ class _IngresarvehiculoState extends State<Ingresarvehiculo> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         centerTitle: true,
-        title: const Text(
-          'Ingresar vehiculo',
-          style: TextStyle(color: Colors.white),
-        ),
       ),
       drawer: const MenuAdministrador(),
       body: LayoutBuilder(
@@ -137,7 +133,14 @@ class _IngresarvehiculoState extends State<Ingresarvehiculo> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Input para la patente del vehículo
+                      const Text(
+                        'Ingresar vehiculo',
+                        style: TextStyle(color: Colors.white, fontSize: 24),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
                       TextFormField(
                         style: const TextStyle(color: Colors.white),
                         controller: _patenteController,
