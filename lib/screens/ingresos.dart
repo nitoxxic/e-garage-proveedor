@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
 import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/ingresosGarage.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/MenuAdministrador.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -78,6 +80,7 @@ class Ingresos extends ConsumerWidget {
         ),
         elevation: 0,
       ),
+      drawer: const MenuAdministrador(), // Menú lateral
       body: Column(
         children: [
           FutureBuilder<Map<String, dynamic>>(
@@ -191,6 +194,7 @@ class Ingresos extends ConsumerWidget {
           ),
         ],
       ),
+      bottomNavigationBar: const BackButtonWidget(),
     );
   }
 }
