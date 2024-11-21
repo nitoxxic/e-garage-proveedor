@@ -6,7 +6,6 @@ import 'package:e_garage_proveedor/widgetsPersonalizados/listaReservas.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
- // Asegúrate de usar la clase correcta del menú lateral.
 
 class PantallaReservas extends ConsumerWidget {
   const PantallaReservas({super.key});
