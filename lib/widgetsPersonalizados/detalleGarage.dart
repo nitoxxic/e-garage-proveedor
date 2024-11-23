@@ -32,7 +32,7 @@ class _DetalleGarageState extends State<DetalleGarage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Nombre del Garage:',
                   style: TextStyle(
                     color: Colors.white70,
@@ -48,7 +48,7 @@ class _DetalleGarageState extends State<DetalleGarage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Text(
+                const Text(
                   'Dirección:',
                   style: TextStyle(
                     color: Colors.white70,
@@ -63,7 +63,7 @@ class _DetalleGarageState extends State<DetalleGarage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Text(
+                const Text(
                   'Lugares Totales:',
                   style: TextStyle(
                     color: Colors.white70,
@@ -78,7 +78,7 @@ class _DetalleGarageState extends State<DetalleGarage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Text(
+                const Text(
                   'Lugares Disponibles:',
                   style: TextStyle(
                     color: Colors.white70,
@@ -92,6 +92,36 @@ class _DetalleGarageState extends State<DetalleGarage> {
                     fontSize: 18,
                   ),
                 ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Valor Hora:',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 16,
+                  ),
+                ),
+                Text(
+                  '${widget.garage.valorHora}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+                const Text(
+                  'Valor Fraccion:',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 16,
+                  ),
+                ),
+                Text(
+                  '${widget.garage.valorFraccion}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+                const SizedBox(height: 20),
               ],
             ),
           ),

@@ -23,16 +23,23 @@ class _EditarGarageState extends State<EditarGarage> {
   late TextEditingController direccionController;
   late TextEditingController lugaresTotalesController;
   late TextEditingController lugaresDisponiblesController;
+  late TextEditingController valorHoraController;
+  late TextEditingController valorFraccionHoraController;
 
   @override
   void initState() {
     super.initState();
     nombreController = TextEditingController(text: widget.garage.nombre);
     direccionController = TextEditingController(text: widget.garage.direccion);
+
     lugaresTotalesController =
         TextEditingController(text: widget.garage.lugaresTotales.toString());
     lugaresDisponiblesController = TextEditingController(
         text: widget.garage.lugaresDisponibles.toString());
+    valorHoraController =
+        TextEditingController(text: (widget.garage.valorHora).toString());
+    valorFraccionHoraController =
+        TextEditingController(text: (widget.garage.valorFraccion).toString());
   }
 
   @override
@@ -41,6 +48,8 @@ class _EditarGarageState extends State<EditarGarage> {
     direccionController.dispose();
     lugaresTotalesController.dispose();
     lugaresDisponiblesController.dispose();
+    valorHoraController.dispose();
+    valorFraccionHoraController.dispose();
     super.dispose();
   }
 
@@ -101,7 +110,8 @@ class _EditarGarageState extends State<EditarGarage> {
       }
 
       // Obtener coordenadas actualizadas si la dirección cambia
-      LatLng? coordenadas = await obtenerCoordenadasDesdeDireccion(direccionController.text);
+      LatLng? coordenadas =
+          await obtenerCoordenadasDesdeDireccion(direccionController.text);
 
       if (coordenadas == null) {
         return; // Si no se obtienen coordenadas, no continuar
@@ -117,17 +127,20 @@ class _EditarGarageState extends State<EditarGarage> {
         'lugaresDisponibles': lugaresDisponibles,
         'latitude': coordenadas.latitude,
         'longitude': coordenadas.longitude,
+        'valorHora': double.parse(valorHoraController.text),
+        'valorFraccion': double.parse(valorFraccionHoraController.text)
       });
 
       // Crear un nuevo objeto Garage con los datos actualizados
       final updatedGarage = widget.garage.copyWith(
-        nombre: nombreController.text,
-        direccion: direccionController.text,
-        lugaresTotales: lugaresTotales,
-        lugaresDisponibles: lugaresDisponibles,
-        latitude: coordenadas.latitude,
-        longitude: coordenadas.longitude,
-      );
+          nombre: nombreController.text,
+          direccion: direccionController.text,
+          lugaresTotales: lugaresTotales,
+          lugaresDisponibles: lugaresDisponibles,
+          latitude: coordenadas.latitude,
+          longitude: coordenadas.longitude,
+          valorHora: double.tryParse(valorHoraController.text),
+          valorFraccion: double.tryParse(valorFraccionHoraController.text));
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Datos guardados exitosamente.')),
@@ -140,7 +153,6 @@ class _EditarGarageState extends State<EditarGarage> {
           builder: (context) => DetalleGarage(garage: updatedGarage),
         ),
       );
-
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al guardar cambios: $e')),
@@ -202,14 +214,28 @@ class _EditarGarageState extends State<EditarGarage> {
                   controller: lugaresDisponiblesController,
                 ),
                 const SizedBox(height: 20),
+                InputTextLogin(
+                  hintText: 'Valor Hora',
+                  icon: const Icon(Icons.access_time_outlined,
+                      color: Colors.white),
+                  controller: valorHoraController,
+                ),
+                const SizedBox(height: 20),
+                InputTextLogin(
+                  hintText: 'Valor Fraccion de Hora',
+                  icon:
+                      const Icon(Icons.add_alarm_rounded, color: Colors.white),
+                  controller: valorFraccionHoraController,
+                ),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                 //   setState(() {
-                  //   nombreController.text = nombreController.text;
-                  //    direccionController.text = direccionController.text;
-                  //    lugaresTotalesController.text = lugaresTotalesController.text;
-                  //    lugaresDisponiblesController.text = lugaresDisponiblesController.text;
-                  //  });
+                    //   setState(() {
+                    //   nombreController.text = nombreController.text;
+                    //    direccionController.text = direccionController.text;
+                    //    lugaresTotalesController.text = lugaresTotalesController.text;
+                    //    lugaresDisponiblesController.text = lugaresDisponiblesController.text;
+                    //  });
                     _guardarCambios();
                   },
                   child: const Center(child: Text('Guardar Cambios')),
