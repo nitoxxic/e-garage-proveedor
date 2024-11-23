@@ -8,6 +8,8 @@ class Garage {
   int lugaresDisponibles;
   double latitude;
   double longitude;
+  double valorHora;
+  double valorFraccion;
   String idAdmin;
 
   Garage({
@@ -17,6 +19,8 @@ class Garage {
     required this.lugaresTotales,
     required this.latitude,
     required this.longitude,
+    required this.valorHora,
+    required this.valorFraccion,
     required this.idAdmin,
   }) : lugaresDisponibles = lugaresTotales;
 
@@ -30,6 +34,8 @@ class Garage {
       "lugaresDisponibles": lugaresDisponibles,
       "latitude": latitude,
       "longitude": longitude,
+      "valorHora": valorHora,
+      "valorFraccion": valorFraccion,
       "idAdmin": idAdmin,
     };
   }
@@ -41,32 +47,38 @@ class Garage {
   ) {
     final data = snapshot.data();
     return Garage(
-      id: data?['id'],
-      nombre: data?['nombre'],
-      direccion: data?['direccion'],
-      lugaresTotales: data?['lugaresTotales'],
-      latitude: data?['latitude'] ?? 0.0,
-      longitude: data?['longitude'] ?? 0.0,
-      idAdmin: data?['idAdmin']
-    )..lugaresDisponibles = data?['lugaresDisponibles'] ?? data?['lugaresTotales'];
+        id: data?['id'],
+        nombre: data?['nombre'],
+        direccion: data?['direccion'],
+        lugaresTotales: data?['lugaresTotales'],
+        latitude: data?['latitude'] ?? 0.0,
+        longitude: data?['longitude'] ?? 0.0,
+        valorHora: data?['valorHora'] ?? 0.0,
+        valorFraccion: data?['valorFraccion'] ?? 0.0,
+        idAdmin: data?['idAdmin'])
+      ..lugaresDisponibles =
+          data?['lugaresDisponibles'] ?? data?['lugaresTotales'];
   }
 
   // Método para copiar la instancia
-  Garage copyWith({
-    String? id,
-    String? nombre,
-    String? direccion,
-    int? lugaresTotales,
-    int? lugaresDisponibles,
-    double? latitude,
-    double? longitude,
-    String? idAdmin
-  }) {
+  Garage copyWith(
+      {String? id,
+      String? nombre,
+      String? direccion,
+      int? lugaresTotales,
+      int? lugaresDisponibles,
+      double? valorHora,
+      double? valorFraccion,
+      double? latitude,
+      double? longitude,
+      String? idAdmin}) {
     return Garage(
       id: id ?? this.id,
       nombre: nombre ?? this.nombre,
       direccion: direccion ?? this.direccion,
       lugaresTotales: lugaresTotales ?? this.lugaresTotales,
+      valorHora: valorHora ?? this.valorHora,
+      valorFraccion: valorFraccion ?? this.valorFraccion,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       idAdmin: idAdmin ?? this.idAdmin,

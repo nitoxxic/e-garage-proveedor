@@ -27,6 +27,10 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
   final TextEditingController _direccionController = TextEditingController();
   final TextEditingController _lugaresTotalesController =
       TextEditingController();
+  final TextEditingController _valorHoraController = TextEditingController();
+  final TextEditingController _valorFraccionController =
+      TextEditingController();
+  final FocusNode _direccionFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   bool _isButtonEnabled = false;
   final db = FirebaseFirestore.instance;
@@ -44,7 +48,9 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
     setState(() {
       _isButtonEnabled = _nombreController.text.isNotEmpty &&
           _direccionController.text.isNotEmpty &&
-          _lugaresTotalesController.text.isNotEmpty;
+          _lugaresTotalesController.text.isNotEmpty &&
+          _valorHoraController.text.isNotEmpty &&
+          _valorFraccionController.text.isNotEmpty;
       //  _imageUrlController.text.isNotEmpty;
     });
   }
@@ -88,12 +94,26 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
     }
   }
 
+  /*Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+        _validateForm();
+      });
+    }
+  }*/
 
   Future<void> guardarGarage(bool statusFormulario, Usuario usuario) async {
     if (statusFormulario) {
       try {
         String nombre = _nombreController.text;
         String direccion = _direccionController.text;
+        double valorHora = double.tryParse(_valorHoraController.text) ?? 0.0;
+        double valorFraccion =
+            double.tryParse(_valorFraccionController.text) ?? 0.0;
         int lugaresTotales = int.tryParse(_lugaresTotalesController.text) ?? 0;
         String idAdmin = usuario.id;
 
@@ -104,6 +124,42 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
           );
           return;
         }
+
+        if (valorHora <= 0) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text('El valor de la hora debe ser mayor a 0.')),
+          );
+          return;
+        }
+
+        if (valorFraccion <= 0) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text(
+                    'El valor de la fraccion de hora debe ser mayor a 0.')),
+          );
+          return;
+        }
+
+        /* if (_selectedImage == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Por favor selecciona una imagen.')),
+          );
+          return;
+        }*/
+
+        // Subir la imagen y obtener la URL
+        /* final uploadedImageUrl = await _uploadImage(_selectedImage!);
+        if (uploadedImageUrl == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content:
+                    Text('No se pudo cargar la imagen. Intente de nuevo.')),
+          );
+          return; // No continuar si la carga falló
+        }
+        imageUrl = uploadedImageUrl;*/
 
         // Obtener coordenadas usando Nominatim
         LatLng? coordenadas = await obtenerCoordenadasDesdeDireccion(direccion);
@@ -126,6 +182,8 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
           'lugaresTotales': lugaresTotales,
           'latitude': latitude,
           'longitude': longitude,
+          'valorHora': valorHora,
+          'valorFraccion': valorFraccion,
           'idAdmin': idAdmin
         };
 
@@ -192,6 +250,20 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
                         icon:
                             const Icon(Icons.location_on, color: Colors.white),
                         controller: _direccionController,
+                      ),
+                      const SizedBox(height: 20),
+                      InputTextLogin(
+                        hintText: 'Valor Hora',
+                        icon:
+                            const Icon(Icons.access_time, color: Colors.white),
+                        controller: _valorHoraController,
+                      ),
+                      const SizedBox(height: 20),
+                      InputTextLogin(
+                        hintText: 'Valor Fracción',
+                        icon: const Icon(Icons.add_alarm_rounded,
+                            color: Colors.white),
+                        controller: _valorFraccionController,
                       ),
                       const SizedBox(height: 20),
                       InputTextLogin(

@@ -27,6 +27,8 @@ class Ingresos extends ConsumerWidget {
             lugaresTotales: data['lugaresTotales'] ?? 0,
             latitude: data['latitude'] ?? 0.0,
             longitude: data['longitude'] ?? 0.0,
+            valorHora: data['valorHora'] ?? 0.0,
+            valorFraccion: data['valorFraccion'] ?? 0.0,
             idAdmin: data['idAmin'] ?? 'Garage sin relacion');
       }).toList();
     });
@@ -186,10 +188,10 @@ class Ingresos extends ConsumerWidget {
                             ),
                             onTap: () {
                               Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  IngresosGarage(garage: garages[index])));
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => IngresosGarage(
+                                          garage: garages[index])));
                             },
                           ),
                         );
