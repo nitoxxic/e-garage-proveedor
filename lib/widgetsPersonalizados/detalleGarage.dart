@@ -107,6 +107,7 @@ class _DetalleGarageState extends State<DetalleGarage> {
                     fontSize: 18,
                   ),
                 ),
+                const SizedBox(height: 20),
                 const Text(
                   'Valor Fraccion:',
                   style: TextStyle(
@@ -121,7 +122,6 @@ class _DetalleGarageState extends State<DetalleGarage> {
                     fontSize: 18,
                   ),
                 ),
-                const SizedBox(height: 20),
               ],
             ),
           ),
