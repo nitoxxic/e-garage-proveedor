@@ -1,7 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 
 import 'dart:convert';
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/core/Entities/Usuario.dart';
 import 'package:e_garage_proveedor/core/Entities/adminGarage.dart';
@@ -9,7 +8,6 @@ import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/input_text_login.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/logo.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -29,7 +27,6 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
   final TextEditingController _direccionController = TextEditingController();
   final TextEditingController _lugaresTotalesController =
       TextEditingController();
-  final FocusNode _direccionFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   bool _isButtonEnabled = false;
   final db = FirebaseFirestore.instance;
@@ -91,17 +88,6 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
     }
   }
 
-  /*Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-        _validateForm();
-      });
-    }
-  }*/
 
   Future<void> guardarGarage(bool statusFormulario, Usuario usuario) async {
     if (statusFormulario) {
@@ -118,25 +104,6 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
           );
           return;
         }
-
-        /* if (_selectedImage == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Por favor selecciona una imagen.')),
-          );
-          return;
-        }*/
-
-        // Subir la imagen y obtener la URL
-        /* final uploadedImageUrl = await _uploadImage(_selectedImage!);
-        if (uploadedImageUrl == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content:
-                    Text('No se pudo cargar la imagen. Intente de nuevo.')),
-          );
-          return; // No continuar si la carga falló
-        }
-        imageUrl = uploadedImageUrl;*/
 
         // Obtener coordenadas usando Nominatim
         LatLng? coordenadas = await obtenerCoordenadasDesdeDireccion(direccion);

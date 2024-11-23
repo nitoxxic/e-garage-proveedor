@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/screens/LoginAdministrador.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/MenuAdministrador.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/dialog_box.dart';
 import 'package:flutter/material.dart';
@@ -129,8 +130,10 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
         }),
       ),
       drawer: const MenuAdministrador(),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
+      body: Stack(
+        children:[
+          LayoutBuilder(
+            builder: (context, constraints) {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(30.0),
             child: ConstrainedBox(
@@ -195,24 +198,18 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
                               'Registrar',
                               style: TextStyle(fontSize: 18),
                             ),
-                          ))
-                    ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blueAccent,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AdminHomePage()),
-          );
-        },
-        child: const Icon(Icons.arrow_back, color: Colors.white),
+              );
+            },
+          ),
+          const BackButtonWidget(),
+        ],
       ),
     );
   }

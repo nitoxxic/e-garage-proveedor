@@ -1,8 +1,7 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/core/Entities/Reserva.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/detalleReserva.dart';
 import 'package:flutter/material.dart';
 
 class ListaReservas extends StatefulWidget {
@@ -90,9 +89,7 @@ class _ListaReservasState extends State<ListaReservas> {
         actions: [
           IconButton(
             icon: Icon(
-              ordenarCronologicamente
-                  ? Icons.arrow_upward
-                  : Icons.arrow_downward,
+              ordenarCronologicamente ? Icons.arrow_upward : Icons.arrow_downward,
               color: Colors.white,
             ),
             onPressed: () {
@@ -155,7 +152,12 @@ class _ListaReservasState extends State<ListaReservas> {
                 ),
               ),
               onTap: () {
-                // Navegar a la pantalla de detalleReserva pasando la reserva
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetalleReserva(reserva: reserva,),
+                  ),
+                );
               },
             ),
           );

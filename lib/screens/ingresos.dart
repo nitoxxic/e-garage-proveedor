@@ -73,11 +73,15 @@ class Ingresos extends ConsumerWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text(
-          'Ingresos Mensuales',
-          style: TextStyle(color: Colors.white),
-        ),
         elevation: 0,
+        leading: Builder(builder: (context) {
+          return IconButton(
+            icon: const Icon(Icons.menu, color: Colors.white),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          );
+        }),
       ),
       drawer: const MenuAdministrador(),
       body: Stack(

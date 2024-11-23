@@ -17,7 +17,7 @@ class MenuAdministrador extends ConsumerWidget {
     ref.read(usuarioProvider.notifier).clearUsuario();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('authToken');
-    context.push('/login');
+    context.push('/selectionScreen');
   }
 
   @override
