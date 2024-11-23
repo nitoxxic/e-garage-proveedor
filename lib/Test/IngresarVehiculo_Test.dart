@@ -83,19 +83,29 @@ class _IngresarvehiculoState extends State<Ingresarvehiculo> {
       // Para asi tambien eliminarlos de la DB.
 
       // Busca el vehículo por patente
-      QuerySnapshot queryAuto = await db
-          .collection('Vehiculos')
-          .where('patente', isEqualTo: patenteBuscado)
-          .limit(1)
-          .get();
+      // QuerySnapshot queryAuto = await db
+      //     .collection('Vehiculos')
+      //     .where('patente', isEqualTo: patenteBuscado)
+      //     .limit(1)
+      //     .get();
 
       DocumentSnapshot docReserva = queryReserva.docs.first;
 
       if (docReserva['estaPago'] == true) {
         // Busca la relación del usuario con el vehículo
-        await db.collection('Reservas').doc(docReserva.id).update({
+        String garageId = docReserva['garajeId'];
+        DocumentSnapshot garageSnapshot = await db.collection('garages').doc(garageId).get();
+        if(garageSnapshot.exists){
+          int lugaresDisponibles = garageSnapshot['lugaresDisponibles'];
+          await db.collection('Reservas').doc(docReserva.id).update({
           'fueAlGarage': true,
         });
+
+        await db.collection('garages').doc(garageId).update(
+          {'lugaresDisponibles': lugaresDisponibles - 1,}
+        );
+        }
+        
 
         showBox(
             'Se ha ingresado el vehiculo con patente ${docReserva['elvehiculo']['patente']}');

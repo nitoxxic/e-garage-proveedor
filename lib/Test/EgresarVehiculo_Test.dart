@@ -21,11 +21,9 @@ class _RetirarVehiculovehiculoState extends State<Retirarvehiculo> {
   @override
   void initState() {
     super.initState();
-    // Añade un listener al controlador para validar el formulario
     _patenteController.addListener(_validateForm);
   }
 
-  // Valida si el formulario es válido y habilita o deshabilita el botón
   void _validateForm() {
     setState(() {
       _isButtonEnabled = _patenteController.text.isNotEmpty &&
@@ -33,10 +31,9 @@ class _RetirarVehiculovehiculoState extends State<Retirarvehiculo> {
     });
   }
 
-  // Valida la patente según los formatos permitidos
   String? _validatePatente(String? value) {
-    final regex1 = RegExp(r'^[A-Za-z]{3}\d{3}$'); // AAA123
-    final regex2 = RegExp(r'^[A-Za-z]{2}\d{3}[A-Za-z]{2}$'); // AA123AA
+    final regex1 = RegExp(r'^[A-Za-z]{3}\d{3}$');
+    final regex2 = RegExp(r'^[A-Za-z]{2}\d{3}[A-Za-z]{2}$');
 
     if (value == null || value.isEmpty) {
       return 'La patente no puede estar vacía';
@@ -46,7 +43,6 @@ class _RetirarVehiculovehiculoState extends State<Retirarvehiculo> {
     return null;
   }
 
-  // Muestra un diálogo con el mensaje proporcionado
   void showBox(String message) {
     showDialog(
         context: context,
@@ -58,35 +54,22 @@ class _RetirarVehiculovehiculoState extends State<Retirarvehiculo> {
         });
   }
 
-  // Función de cancelación para cerrar el diálogo
   void onCancel() {
     Navigator.of(context).pop();
   }
 
-  // Función para retirar el auto de la base de datos
-  Future<void> _ingresarVehiculo(String patenteBuscado) async {
+  Future<void> _egresarVehiculo(String patenteBuscado) async {
     final db = FirebaseFirestore.instance;
 
-    // busca si existe una reserva con la patente ingresada
     QuerySnapshot queryReserva = await db
         .collection('Reservas')
         .where('elvehiculo.patente', isEqualTo: patenteBuscado)
         .limit(1)
         .get();
 
-    // si no existe la reserva lo alerta
     if (queryReserva.docs.isEmpty) {
       showBox('No se encontró ningún auto con esa patente');
     } else {
-      // Si existe le reserva se busca al vehiculo y los datos del usuario.
-      // Para asi tambien eliminarlos de la DB.
-
-      // Busca el vehículo por patente
-      QuerySnapshot queryAuto = await db
-          .collection('Vehiculos')
-          .where('patente', isEqualTo: patenteBuscado)
-          .limit(1)
-          .get();
 
       DocumentSnapshot docReserva = queryReserva.docs.first;
 
@@ -96,29 +79,27 @@ class _RetirarVehiculovehiculoState extends State<Retirarvehiculo> {
           'seRetiro': true,
         });
 
+        String garageId = docReserva['garajeId'];
+        DocumentReference garageRef = db.collection('garages').doc(garageId);
+
+        await db.runTransaction((transaction) async {
+          DocumentSnapshot garageSnapshot = await transaction.get(garageRef);
+
+          if(!garageSnapshot.exists) {
+            showBox('Error: El garage no existe');
+            return;
+          }
+
+          int lugaresDisponibles = garageSnapshot['lugaresDisponibles'];
+          transaction.update(garageRef, {'lugaresDisponibles': lugaresDisponibles + 1});
+        });
+
         showBox(
             'Se ha retirado el vehiculo con patente ${docReserva['elvehiculo']['patente']}');
       } else {
         showBox(
             'El vehiculo con patente: ${docReserva['elvehiculo']['patente']} no ha ingresado previamente');
       }
-
-      /* DocumentSnapshot cantLugares =
-          await db.collection('Lugares').doc('68PCmlqAUB3JJdDFBodl').get();
-
-      int cantActualLugares = cantLugares['cantTotalLugares'];
-      cantActualLugares++;
-      //final Capacidad = CapacidadTotal(cantTotalLugares: cantActualLugares);
-
-      await db
-          .collection('Lugares')
-          .doc('68PCmlqAUB3JJdDFBodl')
-          .set(Capacidad.toFirestore());*/
-
-      // Elimina documentos de la base de datos
-
-      // Muestra un mensaje indicando que el puesto fue liberado
-      //showBox('Se va a liberar el puesto $puesto');
     }
   }
 
@@ -134,18 +115,29 @@ class _RetirarVehiculovehiculoState extends State<Retirarvehiculo> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
+        backgroundColor: Colors.black,
+        elevation: 0,
+        leading: Builder(
+          builder: (context){
+            return IconButton(
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              icon: const Icon(Icons.menu, color: Colors.white),
+              );
+          }),
         centerTitle: true,
         title: const Text(
-          'Retirar vehiculo',
+          'RETIRAR VEHÍCULO',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.black,
       ),
       drawer: const MenuAdministrador(),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(30.0),
+            
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: IntrinsicHeight(
@@ -154,7 +146,6 @@ class _RetirarVehiculovehiculoState extends State<Retirarvehiculo> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Input para la patente del vehículo
                       TextFormField(
                         controller: _patenteController,
                         focusNode: _patenteFocusNode,
@@ -165,23 +156,18 @@ class _RetirarVehiculovehiculoState extends State<Retirarvehiculo> {
                         ),
                         validator: _validatePatente,
                       ),
-
                       const SizedBox(height: 50),
-
-                      // Botón para retirar el vehículo
                       SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: _isButtonEnabled
                                 ? () async {
-                                    // Si el formulario es válido, retira el vehículo
                                     if (_formKey.currentState!.validate()) {
-                                      await _ingresarVehiculo(
+                                      await _egresarVehiculo(
                                           _patenteController.text);
                                     }
                                   }
                                 : () {
-                                    // Si el formulario no es válido, muestra un mensaje de error
                                     if (!_formKey.currentState!.validate()) {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(

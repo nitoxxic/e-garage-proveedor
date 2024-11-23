@@ -26,33 +26,35 @@ class DetalleReserva extends StatelessWidget {
         ),
         elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildDetailRow(
-                'Fecha y hora de inicio', reserva.startTime.toString()),
-            _buildDetailRow('Fecha y hora de fin', reserva.endTime.toString()),
-            _buildDetailRow('Modelo del vehículo', reserva.elvehiculo.modelo!),
-            _buildDetailRow('Marca del vehículo', reserva.elvehiculo.marca!),
-            _buildDetailRow(
-                'Patente del vehículo', reserva.elvehiculo.patente!),
-            _buildDetailRow('Medio de pago', reserva.medioDePago),
-            _buildDetailRow(
-                'Monto total', '\$${reserva.monto.toStringAsFixed(2)}'),
-            _buildDetailRow('Valor por hora al momento',
-                '\$${reserva.valorHoraAlMomentoDeReserva}'),
-            _buildDetailRow('Valor por fracción al momento',
-                '\$${reserva.valorFraccionAlMomentoDeReserva}'),
-            _buildDetailRow('Duración de estadía',
-                '${_formatDuracion(reserva.duracionEstadia)} horas'),
-            _buildDetailRow('¿Está pago?', reserva.estaPago ? 'Sí' : 'No'),
-            _buildDetailRow(
-                '¿Fue al garaje?', reserva.fueAlGarage == true ? 'Sí' : 'No'),
-            _buildDetailRow(
-                '¿Se retiró?', reserva.seRetiro == true ? 'Sí' : 'No'),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildDetailRow(
+                  'Fecha y hora de inicio', reserva.startTime.toString()),
+              _buildDetailRow('Fecha y hora de fin', reserva.endTime.toString()),
+              _buildDetailRow('Modelo del vehículo', reserva.elvehiculo.modelo!),
+              _buildDetailRow('Marca del vehículo', reserva.elvehiculo.marca!),
+              _buildDetailRow(
+                  'Patente del vehículo', reserva.elvehiculo.patente!),
+              _buildDetailRow('Medio de pago', reserva.medioDePago),
+              _buildDetailRow(
+                  'Monto total', '\$${reserva.monto.toStringAsFixed(2)}'),
+              _buildDetailRow('Valor por hora al momento',
+                  '\$${reserva.valorHoraAlMomentoDeReserva}'),
+              _buildDetailRow('Valor por fracción al momento',
+                  '\$${reserva.valorFraccionAlMomentoDeReserva}'),
+              _buildDetailRow('Duración de estadía',
+                  '${_formatDuracion(reserva.duracionEstadia)} horas'),
+              _buildDetailRow('¿Está pago?', reserva.estaPago ? 'Sí' : 'No'),
+              _buildDetailRow(
+                  '¿Fue al garaje?', reserva.fueAlGarage == true ? 'Sí' : 'No'),
+              _buildDetailRow(
+                  '¿Se retiró?', reserva.seRetiro == true ? 'Sí' : 'No'),
+            ],
+          ),
         ),
       ),
     );
