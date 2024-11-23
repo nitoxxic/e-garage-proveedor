@@ -4,6 +4,7 @@ import 'package:e_garage_proveedor/screens/selectionScreen.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class RegistroDuenoGarageScreen extends StatefulWidget {
   const RegistroDuenoGarageScreen({super.key});
@@ -44,7 +45,7 @@ class _RegistroDuenoGarageScreen extends State<RegistroDuenoGarageScreen> {
             children: [
               const SizedBox(height: 30),
               Image.asset(
-                'assets/images/car_logo.png',
+                'assets/images/logo_proveedor.png',
                 height: 200,
               ),
               const SizedBox(height: 30),
@@ -86,7 +87,25 @@ class _RegistroDuenoGarageScreen extends State<RegistroDuenoGarageScreen> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const BackButtonWidget(),
+          Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () {
+                  context.push('/selectionScreen');
+                },
+              ),
+            ),
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: Container(

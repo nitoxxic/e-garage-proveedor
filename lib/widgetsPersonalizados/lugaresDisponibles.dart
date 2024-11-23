@@ -32,11 +32,15 @@ class LugaresDisponibles extends ConsumerWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text(
-          'Lugares Disponibles',
-          style: TextStyle(color: Colors.white),
-        ),
         elevation: 0,
+        leading: Builder(builder: (context) {
+          return IconButton(
+            icon: const Icon(Icons.menu, color: Colors.white),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          );
+        }),
       ),
       drawer: const MenuAdministrador(), // Agregando el menú lateral.
       body: Stack(

@@ -26,11 +26,16 @@ class PantallaReservas extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text(
-          'Mis Garages',
-          style: TextStyle(color: Colors.white),
-        ),
         backgroundColor: Colors.black,
+        elevation: 0,
+        leading: Builder(builder: (context) {
+          return IconButton(
+            icon: const Icon(Icons.menu, color: Colors.white),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          );
+        }),
       ),
       drawer: const MenuAdministrador(),
       body: Stack(
@@ -102,7 +107,7 @@ class PantallaReservas extends ConsumerWidget {
               );
             },
           ),
-          BackButtonWidget(), 
+          const BackButtonWidget(), 
         ],
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/screens/LoginAdministrador.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/MenuAdministrador.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/dialog_box.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +71,6 @@ class _RetirarVehiculovehiculoState extends State<Retirarvehiculo> {
     if (queryReserva.docs.isEmpty) {
       showBox('No se encontró ningún auto con esa patente');
     } else {
-
       DocumentSnapshot docReserva = queryReserva.docs.first;
 
       if (docReserva['fueAlGarage'] == true &&
@@ -85,13 +85,14 @@ class _RetirarVehiculovehiculoState extends State<Retirarvehiculo> {
         await db.runTransaction((transaction) async {
           DocumentSnapshot garageSnapshot = await transaction.get(garageRef);
 
-          if(!garageSnapshot.exists) {
+          if (!garageSnapshot.exists) {
             showBox('Error: El garage no existe');
             return;
           }
 
           int lugaresDisponibles = garageSnapshot['lugaresDisponibles'];
-          transaction.update(garageRef, {'lugaresDisponibles': lugaresDisponibles + 1});
+          transaction.update(
+              garageRef, {'lugaresDisponibles': lugaresDisponibles + 1});
         });
 
         showBox(
@@ -117,90 +118,88 @@ class _RetirarVehiculovehiculoState extends State<Retirarvehiculo> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
-        leading: Builder(
-          builder: (context){
-            return IconButton(
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              icon: const Icon(Icons.menu, color: Colors.white),
-              );
-          }),
-        centerTitle: true,
-        title: const Text(
-          'RETIRAR VEHÍCULO',
-          style: TextStyle(color: Colors.white),
-        ),
+        leading: Builder(builder: (context) {
+          return IconButton(
+            icon: const Icon(Icons.menu, color: Colors.white),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          );
+        }),
       ),
       drawer: const MenuAdministrador(),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(30.0),
-            
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: IntrinsicHeight(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      TextFormField(
-                        controller: _patenteController,
-                        focusNode: _patenteFocusNode,
-                        decoration: const InputDecoration(
-                          labelText: 'Patente',
-                          border: OutlineInputBorder(),
-                          labelStyle: TextStyle(color: Colors.white),
-                        ),
-                        validator: _validatePatente,
-                      ),
-                      const SizedBox(height: 50),
-                      SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _isButtonEnabled
-                                ? () async {
-                                    if (_formKey.currentState!.validate()) {
-                                      await _egresarVehiculo(
-                                          _patenteController.text);
-                                    }
-                                  }
-                                : () {
-                                    if (!_formKey.currentState!.validate()) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'Por favor, corrige los errores antes de continuar.'),
-                                          duration: Duration(seconds: 3),
-                                        ),
-                                      );
-                                    }
-                                  },
-                            child: const Text(
-                              'Egresar',
-                              style: TextStyle(fontSize: 18),
+      body: Stack(
+        children: [
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(30.0),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: IntrinsicHeight(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Retirar Vehiculo',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
                             ),
-                          ))
-                    ],
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 20),
+                          TextFormField(
+                            controller: _patenteController,
+                            focusNode: _patenteFocusNode,
+                            decoration: const InputDecoration(
+                              labelText: 'Patente',
+                              border: OutlineInputBorder(),
+                              labelStyle: TextStyle(color: Colors.white),
+                            ),
+                            validator: _validatePatente,
+                          ),
+                          const SizedBox(height: 50),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: _isButtonEnabled
+                                  ? () async {
+                                      if (_formKey.currentState!.validate()) {
+                                        await _egresarVehiculo(
+                                            _patenteController.text);
+                                      }
+                                    }
+                                  : () {
+                                      if (!_formKey.currentState!.validate()) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Por favor, corrige los errores antes de continuar.'),
+                                            duration: Duration(seconds: 3),
+                                          ),
+                                        );
+                                      }
+                                    },
+                              child: const Text(
+                                'Egresar',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blueAccent,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AdminHomePage()),
-          );
-        },
-        child: const Icon(Icons.arrow_back, color: Colors.white),
+              );
+            },
+          ),
+          const BackButtonWidget(),
+        ],
       ),
     );
   }

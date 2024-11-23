@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/screens/LoginAdministrador.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/MenuAdministrador.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/dialog_box.dart';
 import 'package:flutter/material.dart';
@@ -94,18 +95,18 @@ class _IngresarvehiculoState extends State<Ingresarvehiculo> {
       if (docReserva['estaPago'] == true) {
         // Busca la relación del usuario con el vehículo
         String garageId = docReserva['garajeId'];
-        DocumentSnapshot garageSnapshot = await db.collection('garages').doc(garageId).get();
-        if(garageSnapshot.exists){
+        DocumentSnapshot garageSnapshot =
+            await db.collection('garages').doc(garageId).get();
+        if (garageSnapshot.exists) {
           int lugaresDisponibles = garageSnapshot['lugaresDisponibles'];
           await db.collection('Reservas').doc(docReserva.id).update({
-          'fueAlGarage': true,
-        });
+            'fueAlGarage': true,
+          });
 
-        await db.collection('garages').doc(garageId).update(
-          {'lugaresDisponibles': lugaresDisponibles - 1,}
-        );
+          await db.collection('garages').doc(garageId).update({
+            'lugaresDisponibles': lugaresDisponibles - 1,
+          });
         }
-        
 
         showBox(
             'Se ha ingresado el vehiculo con patente ${docReserva['elvehiculo']['patente']}');
@@ -129,88 +130,95 @@ class _IngresarvehiculoState extends State<Ingresarvehiculo> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        centerTitle: true,
+        elevation: 0,
+        leading: Builder(builder: (context) {
+          return IconButton(
+            icon: const Icon(Icons.menu, color: Colors.white),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          );
+        }),
       ),
       drawer: const MenuAdministrador(),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: IntrinsicHeight(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Ingresar vehiculo',
-                        style: TextStyle(color: Colors.white, fontSize: 24),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        style: const TextStyle(color: Colors.white),
-                        controller: _patenteController,
-                        focusNode: _patenteFocusNode,
-                        decoration: const InputDecoration(
-                            labelText: 'Patente',
-                            border: OutlineInputBorder(),
-                            labelStyle: TextStyle(color: Colors.white)),
-                        validator: _validatePatente,
-                      ),
-
-                      const SizedBox(height: 50),
-
-                      // Botón para retirar el vehículo
-                      SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _isButtonEnabled
-                                ? () async {
-                                    // Si el formulario es válido, retira el vehículo
-                                    if (_formKey.currentState!.validate()) {
-                                      await _ingresarVehiculo(
-                                          _patenteController.text);
-                                    }
-                                  }
-                                : () {
-                                    // Si el formulario no es válido, muestra un mensaje de error
-                                    if (!_formKey.currentState!.validate()) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'Por favor, corrige los errores antes de continuar.'),
-                                          duration: Duration(seconds: 3),
-                                        ),
-                                      );
-                                    }
-                                  },
-                            child: const Text(
-                              'Ingresar',
-                              style: TextStyle(fontSize: 18),
+      body: Stack(
+        children: [
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(30.0),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: IntrinsicHeight(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Ingresar Vehiculo',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
                             ),
-                          ))
-                    ],
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 20),
+
+                          TextFormField(
+                            style: const TextStyle(color: Colors.white),
+                            controller: _patenteController,
+                            focusNode: _patenteFocusNode,
+                            decoration: const InputDecoration(
+                                labelText: 'Patente',
+                                border: OutlineInputBorder(),
+                                labelStyle: TextStyle(color: Colors.white)),
+                            validator: _validatePatente,
+                          ),
+
+                          const SizedBox(height: 50),
+
+                          // Botón para retirar el vehículo
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: _isButtonEnabled
+                                  ? () async {
+                                      // Si el formulario es válido, retira el vehículo
+                                      if (_formKey.currentState!.validate()) {
+                                        await _ingresarVehiculo(
+                                            _patenteController.text);
+                                      }
+                                    }
+                                  : () {
+                                      // Si el formulario no es válido, muestra un mensaje de error
+                                      if (!_formKey.currentState!.validate()) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Por favor, corrige los errores antes de continuar.'),
+                                            duration: Duration(seconds: 3),
+                                          ),
+                                        );
+                                      }
+                                    },
+                              child: const Text(
+                                'Ingresar',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blueAccent,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AdminHomePage()),
-          );
-        },
-        child: const Icon(Icons.arrow_back, color: Colors.white),
+              );
+            },
+          ),
+          const BackButtonWidget(),
+        ],
       ),
     );
   }

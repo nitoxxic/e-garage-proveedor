@@ -8,7 +8,8 @@ class BiometriaService {
   final FlutterSecureStorage _storage = FlutterSecureStorage();
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<void> registrarHuella(BuildContext context, String userId, Map<String, String> userCredentials) async {
+  Future<void> registrarHuellaDuenoGarage(
+      BuildContext context, String duenoId, Map<String, String> duenoCredentials) async {
     try {
       // Verificar soporte y autenticar para registrar huella
       bool authenticated = await _auth.authenticate(
@@ -21,12 +22,12 @@ class BiometriaService {
       );
 
       if (authenticated) {
-        // Guardar credenciales de usuario en almacenamiento seguro
-        await _storage.write(key: 'email', value: userCredentials['email']);
-        await _storage.write(key: 'password', value: userCredentials['password']);
+        // Guardar credenciales en almacenamiento seguro
+        await _storage.write(key: 'email', value: duenoCredentials['email']);
+        await _storage.write(key: 'password', value: duenoCredentials['password']);
 
-        // Actualizar estado de biometría en Firestore
-        await _db.collection('users').doc(userId).update({
+        // Actualizar el estado de biometría en la colección `duenos`
+        await _db.collection('duenos').doc(duenoId).update({
           'biometriaHabilitada': true,
         });
 
@@ -41,7 +42,8 @@ class BiometriaService {
     }
   }
 
-  Future<void> validarCredenciales(BuildContext context, Function onUserAuthenticated) async {
+  Future<void> validarCredencialesDuenoGarage(
+      BuildContext context, Function onDuenoAuthenticated) async {
     try {
       // Recuperar credenciales almacenadas
       final email = await _storage.read(key: 'email');
@@ -54,8 +56,8 @@ class BiometriaService {
         return;
       }
 
-      // Buscar usuario en Firestore
-      final query = await _db.collection('users').where('email', isEqualTo: email).get();
+      // Buscar en la colección `duenos`
+      final query = await _db.collection('duenos').where('email', isEqualTo: email).get();
       if (query.docs.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Usuario no encontrado.')),
@@ -63,13 +65,13 @@ class BiometriaService {
         return;
       }
 
-      final userDoc = query.docs.first;
-      final userData = userDoc.data();
+      final duenoDoc = query.docs.first;
+      final duenoData = duenoDoc.data();
 
       // Validar contraseña
-      if (userData['password'] == password) {
+      if (duenoData['password'] == password) {
         // Invocar el callback al autenticar al usuario
-        onUserAuthenticated(userDoc.id, userData);
+        onDuenoAuthenticated(duenoDoc.id, duenoData);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Contraseña incorrecta.')),
@@ -82,3 +84,4 @@ class BiometriaService {
     }
   }
 }
+

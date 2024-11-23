@@ -15,7 +15,7 @@ class SelectionScreen extends StatelessWidget {
           children: [
             Image.asset(
               'assets/images/logo_proveedor.png',
-              height: 150,
+              height: 250,
             ),
             const SizedBox(height: 30),
             const Text(

@@ -193,7 +193,7 @@ class EditarDatosAdmin extends ConsumerWidget {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      biometriaService.registrarHuella(
+                      biometriaService.registrarHuellaDuenoGarage(
                         context,
                         usuario.id,
                         {

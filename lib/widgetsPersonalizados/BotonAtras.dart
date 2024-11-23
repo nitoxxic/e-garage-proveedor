@@ -1,4 +1,6 @@
+import 'package:e_garage_proveedor/core/router/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class BackButtonWidget extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -24,12 +26,10 @@ class BackButtonWidget extends StatelessWidget {
         ),
         child: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: onPressed ??
-              () {
-                Navigator.of(context).pop();
-              },
+          onPressed: (){
+            context.push('/home-admin');
+          })
         ),
-      ),
     );
   }
 }
