@@ -22,11 +22,9 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
   @override
   void initState() {
     super.initState();
-    // Añade un listener al controlador para validar el formulario
     _patenteController.addListener(_validateForm);
   }
 
-  // Valida si el formulario es válido y habilita o deshabilita el botón
   void _validateForm() {
     setState(() {
       _isButtonEnabled = _patenteController.text.isNotEmpty &&
@@ -34,20 +32,18 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
     });
   }
 
-  // Valida la patente según los formatos permitidos
   String? _validatePatente(String? value) {
-    final regex1 = RegExp(r'^[A-Za-z]{3}\d{3}$'); // AAA123
-    final regex2 = RegExp(r'^[A-Za-z]{2}\d{3}[A-Za-z]{2}$'); // AA123AA
+    final regex1 = RegExp(r'^[A-Za-z]{3}\d{3}$');
+    final regex2 = RegExp(r'^[A-Za-z]{2}\d{3}[A-Za-z]{2}$');
 
     if (value == null || value.isEmpty) {
       return 'La patente no puede estar vacía';
     } else if (!regex1.hasMatch(value) && !regex2.hasMatch(value)) {
-      return 'Patente no válida. Debe ser 3 letras y 3 números o 2 letras, 3 números y 2 letras.';
+      return 'Patente no válida. Debe ser 3 letras y 3 \nnúmeros o 2 letras, 3 números y 2 letras.';
     }
     return null;
   }
 
-  // Muestra un diálogo con el mensaje proporcionado
   void showBox(String message) {
     showDialog(
         context: context,
@@ -59,41 +55,26 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
         });
   }
 
-  // Función de cancelación para cerrar el diálogo
   void onCancel() {
     Navigator.of(context).pop();
   }
 
-  // Función para retirar el auto de la base de datos
   Future<void> _registrarPago(String patenteBuscado) async {
     final db = FirebaseFirestore.instance;
 
-    // busca si existe una reserva con la patente ingresada
     QuerySnapshot queryReserva = await db
         .collection('Reservas')
         .where('elvehiculo.patente', isEqualTo: patenteBuscado)
         .limit(1)
         .get();
 
-    // si no existe la reserva lo alerta
     if (queryReserva.docs.isEmpty) {
       showBox(
           'No se encontró ningún auto con esa patente que tenga una reserva');
     } else {
-      // Si existe le reserva se busca al vehiculo y los datos del usuario.
-      // Para asi tambien eliminarlos de la DB.
-
-      // Busca el vehículo por patente
-      QuerySnapshot queryAuto = await db
-          .collection('Vehiculos')
-          .where('patente', isEqualTo: patenteBuscado)
-          .limit(1)
-          .get();
-
       DocumentSnapshot docReserva = queryReserva.docs.first;
 
       if (docReserva['estaPago'] == false) {
-        // Busca la relación del usuario con el vehículo
         await db.collection('Reservas').doc(docReserva.id).update({
           'estaPago': true,
         });
@@ -153,8 +134,6 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 20),
-
-                      // Input para la patente del vehículo
                       TextFormField(
                         style: const TextStyle(color: Colors.white),
                         controller: _patenteController,
@@ -169,20 +148,17 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
 
                       const SizedBox(height: 50),
 
-                      // Botón para retirar el vehículo
                       SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: _isButtonEnabled
                                 ? () async {
-                                    // Si el formulario es válido, retira el vehículo
                                     if (_formKey.currentState!.validate()) {
                                       await _registrarPago(
                                           _patenteController.text);
                                     }
                                   }
                                 : () {
-                                    // Si el formulario no es válido, muestra un mensaje de error
                                     if (!_formKey.currentState!.validate()) {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(

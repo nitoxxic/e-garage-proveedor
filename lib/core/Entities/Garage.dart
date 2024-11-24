@@ -53,8 +53,9 @@ class Garage {
         lugaresTotales: data?['lugaresTotales'],
         latitude: data?['latitude'] ?? 0.0,
         longitude: data?['longitude'] ?? 0.0,
-        valorHora: data?['valorHora'] ?? 0.0,
-        valorFraccion: data?['valorFraccion'] ?? 0.0,
+        valorHora: (data?['valorHora'] as num).toDouble(),
+        valorFraccion: (data?['valorFraccion'] as num).toDouble(),
+        //(data['monto'] as num).toDouble()
         idAdmin: data?['idAdmin'])
       ..lugaresDisponibles =
           data?['lugaresDisponibles'] ?? data?['lugaresTotales'];
