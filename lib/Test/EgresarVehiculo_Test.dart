@@ -39,7 +39,7 @@ class _RetirarVehiculovehiculoState extends State<Retirarvehiculo> {
     if (value == null || value.isEmpty) {
       return 'La patente no puede estar vacía';
     } else if (!regex1.hasMatch(value) && !regex2.hasMatch(value)) {
-      return 'Patente no válida. Debe ser 3 letras y 3 números o 2 letras, 3 números y 2 letras.';
+      return 'Patente no válida. Debe ser 3 letras y 3 \nnúmeros o 2 letras, 3 números y 2 letras.';
     }
     return null;
   }

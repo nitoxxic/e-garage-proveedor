@@ -42,7 +42,7 @@ class _IngresarvehiculoState extends State<Ingresarvehiculo> {
     if (value == null || value.isEmpty) {
       return 'La patente no puede estar vacía';
     } else if (!regex1.hasMatch(value) && !regex2.hasMatch(value)) {
-      return 'Patente no válida. Debe ser 3 letras y 3 números o 2 letras, 3 números y 2 letras.';
+      return 'Patente no válida. Debe ser 3 letras y 3 \n números o 2 letras, 3 números y 2 letras.';
     }
     return null;
   }
@@ -68,32 +68,18 @@ class _IngresarvehiculoState extends State<Ingresarvehiculo> {
   Future<void> _ingresarVehiculo(String patenteBuscado) async {
     final db = FirebaseFirestore.instance;
 
-    // busca si existe una reserva con la patente ingresada
     QuerySnapshot queryReserva = await db
         .collection('Reservas')
         .where('elvehiculo.patente', isEqualTo: patenteBuscado)
         .limit(1)
         .get();
 
-    // si no existe la reserva lo alerta
     if (queryReserva.docs.isEmpty) {
       showBox(
           'No se encontró ningún auto con esa patente que tenga una reserva');
     } else {
-      // Si existe le reserva se busca al vehiculo y los datos del usuario.
-      // Para asi tambien eliminarlos de la DB.
-
-      // Busca el vehículo por patente
-      // QuerySnapshot queryAuto = await db
-      //     .collection('Vehiculos')
-      //     .where('patente', isEqualTo: patenteBuscado)
-      //     .limit(1)
-      //     .get();
-
       DocumentSnapshot docReserva = queryReserva.docs.first;
-
       if (docReserva['estaPago'] == true) {
-        // Busca la relación del usuario con el vehículo
         String garageId = docReserva['garajeId'];
         DocumentSnapshot garageSnapshot =
             await db.collection('garages').doc(garageId).get();
@@ -102,12 +88,10 @@ class _IngresarvehiculoState extends State<Ingresarvehiculo> {
           await db.collection('Reservas').doc(docReserva.id).update({
             'fueAlGarage': true,
           });
-
           await db.collection('garages').doc(garageId).update({
             'lugaresDisponibles': lugaresDisponibles - 1,
           });
         }
-
         showBox(
             'Se ha ingresado el vehiculo con patente ${docReserva['elvehiculo']['patente']}');
       } else {
