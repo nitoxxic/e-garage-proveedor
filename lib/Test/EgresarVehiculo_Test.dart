@@ -152,6 +152,7 @@ class _RetirarVehiculovehiculoState extends State<Retirarvehiculo> {
                           ),
                           const SizedBox(height: 20),
                           TextFormField(
+                            style: const TextStyle(color: Colors.white),
                             controller: _patenteController,
                             focusNode: _patenteFocusNode,
                             decoration: const InputDecoration(
