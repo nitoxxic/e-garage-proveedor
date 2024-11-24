@@ -32,7 +32,6 @@ class _ListaReservasState extends State<ListaReservas> {
           'garajeId',
           isEqualTo: widget.garageId,
         )
-        .where('seRetiro', isEqualTo: false)
         .get();
 
     setState(() {
