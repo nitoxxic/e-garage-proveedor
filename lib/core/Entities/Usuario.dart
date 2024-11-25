@@ -10,7 +10,6 @@ class Usuario {
   String telefono;
   String? token;
   bool esAdmin;
-  bool biometriaHabilitada;
 
   Usuario({
     required this.id,
@@ -22,7 +21,6 @@ class Usuario {
     required this.telefono,
     this.token,
     this.esAdmin = false,
-    required this.biometriaHabilitada,
   });
 
   Map<String, dynamic> toFirestore() {
@@ -55,8 +53,7 @@ class Usuario {
         telefono: data?['telefono'],
         token: data?['token'],
         esAdmin: data?['esAdmin'] ?? false,
-        biometriaHabilitada:
-            data?['biometriaHabilitada']); // Si esAdmin es null, asigna false
+        ); // Si esAdmin es null, asigna false
   }
 
   Usuario copywith({
@@ -69,7 +66,7 @@ class Usuario {
     String? telefono,
     String? token,
     bool? esAdmin,
-    bool? biometriaHabilitada,
+
   }) {
     return Usuario(
         id: id ?? this.id,
@@ -81,7 +78,6 @@ class Usuario {
         telefono: telefono ?? this.telefono,
         token: token ?? this.token,
         esAdmin: esAdmin ?? this.esAdmin ?? false,
-        biometriaHabilitada: biometriaHabilitada ??
-            this.biometriaHabilitada); // Usa false si esAdmin es null
+        ); // Usa false si esAdmin es null
   }
 }

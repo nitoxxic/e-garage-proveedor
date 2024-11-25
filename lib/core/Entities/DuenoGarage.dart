@@ -22,6 +22,5 @@ class DuenoGarage extends Usuario {
     bool biometriaHabilitada = false,
   }) : super(
           esAdmin: true,
-          biometriaHabilitada: biometriaHabilitada,
         );
 }

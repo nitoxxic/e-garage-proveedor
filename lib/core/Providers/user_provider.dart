@@ -17,13 +17,19 @@ class UsuarioNotifier extends StateNotifier<Usuario> {
           telefono: '',
           token: '',
           esAdmin: false,
-          biometriaHabilitada: false,
         ));
 
   // Método para establecer los datos del usuario
-  void setUsuario(String id, String nombre, String apellido, String email,
-      String password, String dni, String telefono, String token, bool esAdmin,
-      {bool biometriaHabilitada = false}) {
+  void setUsuario(
+        String id, 
+        String nombre, 
+        String apellido, 
+        String email,
+        String password, 
+        String dni, 
+        String telefono, 
+        String token, 
+        bool esAdmin) {
     state = state.copywith(
       id: id,
       nombre: nombre,
@@ -34,11 +40,9 @@ class UsuarioNotifier extends StateNotifier<Usuario> {
       telefono: telefono,
       token: token,
       esAdmin: esAdmin,
-      biometriaHabilitada: biometriaHabilitada,
     );
   }
 
-  // Método para limpiar los datos del usuario (cierre de sesión)
   void clearUsuario() {
     state = Usuario(
       id: '',
@@ -50,12 +54,7 @@ class UsuarioNotifier extends StateNotifier<Usuario> {
       telefono: '',
       token: '',
       esAdmin: false,
-      biometriaHabilitada: false,
     );
   }
 
-  // Método para actualizar la preferencia de biometría
-  void setBiometriaHabilitada(bool habilitada) {
-    state = state.copywith(biometriaHabilitada: habilitada);
-  }
 }
