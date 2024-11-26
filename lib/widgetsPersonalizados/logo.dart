@@ -20,8 +20,7 @@ class LogoWidget extends StatelessWidget {
           height: size,
           width: size,
         ),
-        if (showText)
-          const SizedBox(height: 10),
+        if (showText) const SizedBox(height: 10),
         if (showText)
           const Text(
             'E-Garage',

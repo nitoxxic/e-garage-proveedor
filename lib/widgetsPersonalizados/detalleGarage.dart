@@ -1,4 +1,6 @@
+import 'package:e_garage_proveedor/core/Entities/ComentarioReserva.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
+import 'package:e_garage_proveedor/screens/comentariosGarage.dart';
 import 'package:e_garage_proveedor/screens/editarGarage.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter/material.dart';
@@ -121,6 +123,19 @@ class _DetalleGarageState extends State<DetalleGarage> {
                     color: Colors.white,
                     fontSize: 18,
                   ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ComentariosGarage(garage: widget.garage),
+                      ),
+                    );
+                  },
+                  child: const Text('Comentarios'),
                 ),
               ],
             ),

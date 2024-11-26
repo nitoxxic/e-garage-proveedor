@@ -2,7 +2,7 @@ import 'package:e_garage_proveedor/Test/EgresarVehiculo_Test.dart';
 import 'package:e_garage_proveedor/Test/IngresarVehiculo_Test.dart';
 import 'package:e_garage_proveedor/Test/RegistrarPagoEfectivo.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
-import 'package:e_garage_proveedor/widgetsPersonalizados/agregarGarage.dart';
+import 'package:e_garage_proveedor/screens/comentariosGarage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:e_garage_proveedor/screens/EditarDatosAdmin.dart';
 import 'package:e_garage_proveedor/screens/EditarGarage.dart';
@@ -48,10 +48,12 @@ final GoRouter appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: '/agregar-garage',
-      name: 'AgregarGarage',
-      builder: (context, state) => const AgregarGarage(),
-    ),
+        path: '/comentario-garage',
+        name: 'ComentarioGarage',
+        builder: (context, state) {
+          final garage = state.extra as Garage;
+          return ComentariosGarage(garage: garage);
+        }),
     GoRoute(
       path: '/Ingresarvehiculo',
       builder: (context, state) => const Ingresarvehiculo(),
