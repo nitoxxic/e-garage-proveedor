@@ -4,6 +4,7 @@ import 'package:e_garage_proveedor/Test/RegistrarPagoEfectivo.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
 import 'package:e_garage_proveedor/screens/comentariosGarage.dart';
 import 'package:e_garage_proveedor/screens/recuperacionPassword.dart';
+import 'package:e_garage_proveedor/widgetsPersonalizados/agregarGarage.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/detalleGarage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:e_garage_proveedor/screens/EditarDatosAdmin.dart';
@@ -87,6 +88,11 @@ final GoRouter appRouter = GoRouter(
       path: '/recuperarContrasenia',
       builder: (context, state) => PasswordResetPage(),
       name: 'PasswordResetPage',
+    ),
+    GoRoute(
+      path: '/agregar-garage',
+      builder: (context, state) => const AgregarGarage(),
+      name: 'AgregarGarage',
     ),
   ],
 );

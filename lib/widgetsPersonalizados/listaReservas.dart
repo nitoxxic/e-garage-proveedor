@@ -3,6 +3,7 @@ import 'package:e_garage_proveedor/core/Entities/Reserva.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/detalleReserva.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ListaReservas extends StatefulWidget {
   final String garageId;
@@ -73,7 +74,12 @@ class _ListaReservasState extends State<ListaReservas> {
       appBar: AppBar(
         leading: Transform.scale(
           scale: 0.7,
-          child: const BackButtonWidget(),
+          child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () {
+                    context.pop();
+                  },
+                ),
         ),
         backgroundColor: const Color(0xFF2E2E2E),
         title: const Text(

@@ -1,6 +1,7 @@
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter/material.dart';
 import 'package:e_garage_proveedor/core/Entities/Reserva.dart';
+import 'package:go_router/go_router.dart';
 
 class DetalleReserva extends StatelessWidget {
   final Reserva reserva;
@@ -19,7 +20,15 @@ class DetalleReserva extends StatelessWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        leading: BackButtonWidget(),
+        leading: Transform.scale(
+          scale: 0.7,
+          child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () {
+                    context.pop();
+                  },
+                ),
+        ),
         title: const Text(
           'Detalle de la Reserva',
           style: TextStyle(color: Colors.white),

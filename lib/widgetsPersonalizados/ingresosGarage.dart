@@ -6,6 +6,7 @@ import 'package:e_garage_proveedor/core/Entities/Reserva.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/detalleReserva.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class IngresosGarage extends StatefulWidget {
   final Garage garage;
@@ -162,13 +163,28 @@ class _IngresosGarageState extends State<IngresosGarage> {
             ],
           ),
           // Aquí es donde aplicamos el BackButtonWidget en la parte inferior izquierda
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: BackButtonWidget(), // Utiliza tu widget personalizado aquí
-            ),
-          ),
+          Positioned(
+              bottom: 16,
+              left: 16,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  onPressed: () {
+                    context.pop();
+                  },
+                ),
+              )),
         ],
       ),
     );

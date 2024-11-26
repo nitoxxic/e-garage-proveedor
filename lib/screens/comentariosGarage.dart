@@ -3,9 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_garage_proveedor/core/Entities/ComentarioReserva.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
-import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/MenuAdministrador.dart';
-import 'package:e_garage_proveedor/widgetsPersonalizados/logo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -74,7 +72,7 @@ class _ComentariosGarageState extends ConsumerState<ComentariosGarage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const LogoWidget(size: 300, showText: false),
+                // const LogoWidget(size: 300, showText: false),
                 const SizedBox(height: 20),
                 const Center(
                   child: Text(
@@ -125,25 +123,28 @@ class _ComentariosGarageState extends ConsumerState<ComentariosGarage> {
               ],
             ),
           ),
-          Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
+          Positioned(
+              bottom: 16,
+              left: 16,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () {
-                context.pop();
-              },
-            ),
-          ),
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  onPressed: () {
+                    context.pop();
+                  },
+                ),
+              )),
         ],
       ),
     );
