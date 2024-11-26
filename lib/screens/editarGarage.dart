@@ -167,7 +167,11 @@ class _EditarGarageState extends State<EditarGarage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
-        title: const Text('Editar Garage'),
+        title: const Text(
+          'Editar Garage',
+          style: TextStyle(color: Colors.white),
+        ),
+        leading: Container(),
       ),
       body: Stack(
         children: [

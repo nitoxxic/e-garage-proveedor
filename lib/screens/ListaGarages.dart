@@ -7,7 +7,6 @@ import 'package:e_garage_proveedor/core/Entities/Garage.dart';
 import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/detalleGarage.dart';
 
-
 class ListaGarages extends ConsumerWidget {
   const ListaGarages({super.key});
 
@@ -34,11 +33,8 @@ class ListaGarages extends ConsumerWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text(
-          'Mis Garages',
-          style: TextStyle(color: Colors.white),
-        ),
         elevation: 0,
+        leading: Container(),
       ),
       body: Stack(
         children: [

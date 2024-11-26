@@ -25,6 +25,7 @@ class _DetalleGarageState extends State<DetalleGarage> {
           style: TextStyle(color: Colors.white),
         ),
         elevation: 0,
+        leading: Container(),
       ),
       body: Stack(
         children: [

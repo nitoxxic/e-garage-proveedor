@@ -82,5 +82,10 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const AdminHomePage(),
       name: AdminHomePage.name,
     ),
+    GoRoute(
+      path: '/recuperarContrasenia',
+      builder: (context, state) => const AdminHomePage(),
+      name: 'recuperarContrasenia',
+    ),
   ],
 );

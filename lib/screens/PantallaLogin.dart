@@ -39,6 +39,19 @@ class LoginScreen extends ConsumerWidget {
               _buildTextField('Password', (value) => _clave = value,
                   obscureText: true),
               const SizedBox(height: 50),
+              GestureDetector(
+                child: const Text(
+                  'Olvide la contraseña',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
+                ),
+                onTap: () {
+                  //context.push(location);
+                },
+              ),
+              const SizedBox(height: 50),
             ],
           ),
         ),
@@ -140,7 +153,6 @@ class LoginScreen extends ConsumerWidget {
       User? user = userCredential.user;
 
       if (user != null) {
-
         QuerySnapshot querySnapshot = await db
             .collection("duenos")
             .where("email", isEqualTo: _email)
@@ -195,43 +207,45 @@ class LoginScreen extends ConsumerWidget {
       _showErrorSnackbar(context, 'Error inesperado: $e');
     }
   }
-    // Método para validar el formato del correo electrónico
-    bool _esCorreoValido(String email) {
+
+  // Método para validar el formato del correo electrónico
+  bool _esCorreoValido(String email) {
     final regex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
     return regex.hasMatch(email);
-    } 
+  }
 
-    Future<void> _authenticateDuenoGarage(BuildContext context, WidgetRef ref) async {
+  Future<void> _authenticateDuenoGarage(
+      BuildContext context, WidgetRef ref) async {
     final FlutterSecureStorage storage = FlutterSecureStorage();
     bool authenticated = false;
 
     try {
-    authenticated = await auth.authenticate(
-      localizedReason: 'Autentícate para acceder',
-      options: const AuthenticationOptions(
-        biometricOnly: true,
-        useErrorDialogs: true,
-        stickyAuth: true,
-      ),
-    );
+      authenticated = await auth.authenticate(
+        localizedReason: 'Autentícate para acceder',
+        options: const AuthenticationOptions(
+          biometricOnly: true,
+          useErrorDialogs: true,
+          stickyAuth: true,
+        ),
+      );
 
-    if (authenticated) {
-      // Recuperar las credenciales almacenadas
-      String? email = await storage.read(key: 'email');
-      String? password = await storage.read(key: 'password');
+      if (authenticated) {
+        // Recuperar las credenciales almacenadas
+        String? email = await storage.read(key: 'email');
+        String? password = await storage.read(key: 'password');
 
-      if (email != null && password != null) {
-        // Validar usuario con las credenciales recuperadas en la colección `duenos`
-        QuerySnapshot querySnapshot = await db
-            .collection("duenos")
-            .where("email", isEqualTo: email)
-            .get();
+        if (email != null && password != null) {
+          // Validar usuario con las credenciales recuperadas en la colección `duenos`
+          QuerySnapshot querySnapshot = await db
+              .collection("duenos")
+              .where("email", isEqualTo: email)
+              .get();
 
-        if (querySnapshot.docs.isNotEmpty) {
-          Map<String, dynamic> duenoData =
-              querySnapshot.docs.first.data() as Map<String, dynamic>;
-              
-              if (duenoData['email'] == email &&
+          if (querySnapshot.docs.isNotEmpty) {
+            Map<String, dynamic> duenoData =
+                querySnapshot.docs.first.data() as Map<String, dynamic>;
+
+            if (duenoData['email'] == email &&
                 duenoData['password'] == password) {
               ref.read(usuarioProvider.notifier).setUsuario(
                     duenoData['id'],
@@ -245,27 +259,28 @@ class LoginScreen extends ConsumerWidget {
                     duenoData['esAdmin'],
                   );
 
-          if (duenoData['email'] == email && duenoData['password'] == password) {
-            context.go('/home-admin');
-          } 
-          }else {
-            _showErrorSnackbar(context, 'Error de autenticación.');
+              if (duenoData['email'] == email &&
+                  duenoData['password'] == password) {
+                context.go('/home-admin');
+              }
+            } else {
+              _showErrorSnackbar(context, 'Error de autenticación.');
+            }
+          } else {
+            _showErrorSnackbar(context, 'Usuario no encontrado.');
           }
         } else {
-          _showErrorSnackbar(context, 'Usuario no encontrado.');
+          _showErrorSnackbar(
+            context,
+            'No se encontraron credenciales almacenadas.',
+          );
         }
       }
-       else {
-        _showErrorSnackbar(
-          context,
-          'No se encontraron credenciales almacenadas.',
-        );
-      }
-    }
     } catch (e) {
-    _showErrorSnackbar(context, 'Error de autenticación biométrica: $e');
-   }
+      _showErrorSnackbar(context, 'Error de autenticación biométrica: $e');
+    }
   }
+
   void _showErrorSnackbar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
