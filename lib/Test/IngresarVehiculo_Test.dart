@@ -79,7 +79,8 @@ class _IngresarvehiculoState extends State<Ingresarvehiculo> {
           'No se encontró ningún auto con esa patente que tenga una reserva');
     } else {
       DocumentSnapshot docReserva = queryReserva.docs.first;
-      if (docReserva['estaPago'] == true) {
+      if (docReserva['estaPago'] == true &&
+          docReserva['fueAlGarage'] == false) {
         String garageId = docReserva['garajeId'];
         DocumentSnapshot garageSnapshot =
             await db.collection('garages').doc(garageId).get();
@@ -94,6 +95,10 @@ class _IngresarvehiculoState extends State<Ingresarvehiculo> {
         }
         showBox(
             'Se ha ingresado el vehiculo con patente ${docReserva['elvehiculo']['patente']}');
+      } else if (docReserva['estaPago'] == true &&
+          docReserva['fueAlGarage'] == false) {
+        showBox(
+            'Advertencia: El vehiculo con patente ${docReserva['elvehiculo']['patente']} ya habia sido ingresado');
       } else {
         showBox(
             'Reserva no abonada para la patente: ${docReserva['elvehiculo']['patente']}');
