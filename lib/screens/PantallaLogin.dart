@@ -48,7 +48,7 @@ class LoginScreen extends ConsumerWidget {
                   ),
                 ),
                 onTap: () {
-                  //context.push(location);
+                  context.goNamed('PasswordResetPage');
                 },
               ),
               const SizedBox(height: 50),
