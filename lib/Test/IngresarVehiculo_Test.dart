@@ -96,7 +96,7 @@ class _IngresarvehiculoState extends State<Ingresarvehiculo> {
         showBox(
             'Se ha ingresado el vehiculo con patente ${docReserva['elvehiculo']['patente']}');
       } else if (docReserva['estaPago'] == true &&
-          docReserva['fueAlGarage'] == false) {
+          docReserva['fueAlGarage'] == true) {
         showBox(
             'Advertencia: El vehiculo con patente ${docReserva['elvehiculo']['patente']} ya habia sido ingresado');
       } else {
