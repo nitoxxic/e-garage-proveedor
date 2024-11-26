@@ -224,7 +224,9 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
         appBar: AppBar(
           backgroundColor: Colors.black,
           centerTitle: true,
-          title: const Text('Complete los datos del garage'),
+          title: const Text('Complete los datos del garage',style: TextStyle(color: Colors.white)),
+          
+          leading: Container(),
         ),
         body: SingleChildScrollView(
           child: Padding(
