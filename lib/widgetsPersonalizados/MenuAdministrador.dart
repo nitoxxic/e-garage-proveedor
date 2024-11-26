@@ -22,15 +22,20 @@ class MenuAdministrador extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userActivo = ref.watch(usuarioProvider);
     return Drawer(
       child: Container(
         color: Colors.grey[200],
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(color: Colors.white),
-              child: Text('Menú', style: TextStyle(fontSize: 24)),
+              child: Text(
+                  'Menú \n'
+                  '\n'
+                  '¡Hola ${userActivo.nombre}!',
+                  style: TextStyle(fontSize: 24)),
             ),
             ListTile(
               leading: const Icon(Icons.person, size: 40, color: Colors.black),

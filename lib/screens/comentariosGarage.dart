@@ -125,15 +125,25 @@ class _ComentariosGarageState extends ConsumerState<ComentariosGarage> {
               ],
             ),
           ),
-          Positioned(
-            bottom: 20,
-            left: 20,
-            child: BackButtonWidget(
+          Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () {
-                context.push('/mapa');
+                context.pop();
               },
             ),
-          )
+          ),
         ],
       ),
     );
