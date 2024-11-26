@@ -25,10 +25,10 @@ class Ingresos extends ConsumerWidget {
             nombre: data['nombre'] ?? 'Garage sin nombre',
             direccion: data['direccion'] ?? 'Dirección desconocida',
             lugaresTotales: data['lugaresTotales'] ?? 0,
-            latitude: data['latitude'] ?? 0.0,
-            longitude: data['longitude'] ?? 0.0,
-            valorHora: data['valorHora'] ?? 0.0,
-            valorFraccion: data['valorFraccion'] ?? 0.0,
+            latitude: (data['latitude'] ?? 0.0).toDouble(),
+    longitude: (data['longitude'] ?? 0.0).toDouble(),
+    valorHora: (data['valorHora'] ?? 0.0).toDouble(),
+    valorFraccion: (data['valorFraccion'] ?? 0.0).toDouble(),
             idAdmin: data['idAmin'] ?? 'Garage sin relacion');
       }).toList();
     });
