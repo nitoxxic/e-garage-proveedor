@@ -180,6 +180,7 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
           'nombre': nombre,
           'direccion': direccion,
           'lugaresTotales': lugaresTotales,
+          'lugaresDisponibles': lugaresTotales,
           'latitude': latitude,
           'longitude': longitude,
           'valorHora': valorHora,
@@ -224,8 +225,8 @@ class _TestAgregarGarage extends ConsumerState<AgregarGarage> {
         appBar: AppBar(
           backgroundColor: Colors.black,
           centerTitle: true,
-          title: const Text('Complete los datos del garage',style: TextStyle(color: Colors.white)),
-          
+          title: const Text('Complete los datos del garage',
+              style: TextStyle(color: Colors.white)),
           leading: Container(),
         ),
         body: SingleChildScrollView(
