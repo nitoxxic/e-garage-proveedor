@@ -65,6 +65,7 @@ class _RetirarVehiculovehiculoState extends State<Retirarvehiculo> {
     QuerySnapshot queryReserva = await db
         .collection('Reservas')
         .where('elvehiculo.patente', isEqualTo: patenteBuscado)
+        .where('seRetiro', isNotEqualTo: true)
         .limit(1)
         .get();
 
