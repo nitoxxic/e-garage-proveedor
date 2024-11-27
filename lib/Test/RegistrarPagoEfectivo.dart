@@ -65,6 +65,7 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
     QuerySnapshot queryReserva = await db
         .collection('Reservas')
         .where('elvehiculo.patente', isEqualTo: patenteBuscado)
+        .where('estaPago', isNotEqualTo: true)
         .limit(1)
         .get();
 
@@ -112,68 +113,66 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
       ),
       drawer: const MenuAdministrador(),
       body: Stack(
-        children:[
+        children: [
           LayoutBuilder(
             builder: (context, constraints) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(30.0),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: IntrinsicHeight(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Ingrese la patente para registrar el pago',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        style: const TextStyle(color: Colors.white),
-                        controller: _patenteController,
-                        focusNode: _patenteFocusNode,
-                        decoration: const InputDecoration(
-                          labelStyle: TextStyle(color: Colors.white),
-                          labelText: 'Patente',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: _validatePatente,
-                      ),
-
-                      const SizedBox(height: 50),
-
-                      SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _isButtonEnabled
-                                ? () async {
-                                    if (_formKey.currentState!.validate()) {
-                                      await _registrarPago(
-                                          _patenteController.text);
-                                    }
-                                  }
-                                : () {
-                                    if (!_formKey.currentState!.validate()) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'Por favor, corrige los errores antes de continuar.'),
-                                          duration: Duration(seconds: 3),
-                                        ),
-                                      );
-                                    }
-                                  },
-                            child: const Text(
-                              'Registrar',
-                              style: TextStyle(fontSize: 18),
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(30.0),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: IntrinsicHeight(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Ingrese la patente para registrar el pago',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
                             ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 20),
+                          TextFormField(
+                            style: const TextStyle(color: Colors.white),
+                            controller: _patenteController,
+                            focusNode: _patenteFocusNode,
+                            decoration: const InputDecoration(
+                              labelStyle: TextStyle(color: Colors.white),
+                              labelText: 'Patente',
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: _validatePatente,
+                          ),
+                          const SizedBox(height: 50),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: _isButtonEnabled
+                                  ? () async {
+                                      if (_formKey.currentState!.validate()) {
+                                        await _registrarPago(
+                                            _patenteController.text);
+                                      }
+                                    }
+                                  : () {
+                                      if (!_formKey.currentState!.validate()) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Por favor, corrige los errores antes de continuar.'),
+                                            duration: Duration(seconds: 3),
+                                          ),
+                                        );
+                                      }
+                                    },
+                              child: const Text(
+                                'Registrar',
+                                style: TextStyle(fontSize: 18),
+                              ),
                             ),
                           ),
                         ],
