@@ -107,7 +107,28 @@ class listaDeGarageParaPagar extends ConsumerWidget {
             },
           ),
 
-          const BackButtonWidget(),
+          Positioned(
+              bottom: 16,
+              left: 16,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  onPressed: () {
+                    context.push('/home-admin');
+                  },
+                ),
+              )),
         ],
       ),
     );

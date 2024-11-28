@@ -84,7 +84,6 @@ class MenuAdministrador extends ConsumerWidget {
                   const Text('Registrar pago', style: TextStyle(fontSize: 18)),
               onTap: () {
                 context.goNamed(listaDeGarageParaPagar.name);
-                //context.goNamed(Registrarpagoefectivo.name);
               },
             ),
             ListTile(

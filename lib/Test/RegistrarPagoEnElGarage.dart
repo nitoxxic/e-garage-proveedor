@@ -4,6 +4,7 @@ import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/MenuAdministrador.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/dialog_box.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class RegistrarpagoEnefectivoEnElGarage extends StatefulWidget {
   static const String name = 'Registrarpagoefectivo';
@@ -189,7 +190,28 @@ class _RegistrarpagoefectivoState
               );
             },
           ),
-          const BackButtonWidget(),
+          Positioned(
+              bottom: 16,
+              left: 16,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  onPressed: () {
+                    context.push('/listaDeGarageParaPagar');
+                  },
+                ),
+              )),
         ],
       ),
     );

@@ -140,7 +140,7 @@ class _DetalleGarageState extends State<DetalleGarage> {
                   },
                   child: const Text('Comentarios'),
                 ),
-                ElevatedButton(
+                /* ElevatedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -175,7 +175,7 @@ class _DetalleGarageState extends State<DetalleGarage> {
                     );
                   },
                   child: const Text('Registrar pago'),
-                ),
+                ),*/
               ],
             ),
           ),
