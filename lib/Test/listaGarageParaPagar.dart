@@ -1,3 +1,4 @@
+import 'package:e_garage_proveedor/Test/RegistrarPagoEnElGarage.dart';
 import 'package:e_garage_proveedor/Test/ingresarVehiculoAGarage.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter/material.dart';
@@ -91,8 +92,9 @@ class listaDeGarageParaPagar extends ConsumerWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => IngresarvehiculoAlGarage(
-                                  garage: garages[index])
+                              builder: (context) =>
+                                  RegistrarpagoEnefectivoEnElGarage(
+                                      garage: garages[index])
 
                               //DetalleGarage(garage: garages[index]),
                               ),

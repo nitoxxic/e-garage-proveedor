@@ -1,3 +1,4 @@
+import 'package:e_garage_proveedor/Test/egrasarVehiculoAlGarage.dart';
 import 'package:e_garage_proveedor/Test/ingresarVehiculoAGarage.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:flutter/material.dart';
@@ -91,7 +92,7 @@ class listaDeGarageParaEngresarVehiculos extends ConsumerWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => IngresarvehiculoAlGarage(
+                              builder: (context) => RetirarVehiculoDelGarage(
                                   garage: garages[index])
 
                               //DetalleGarage(garage: garages[index]),

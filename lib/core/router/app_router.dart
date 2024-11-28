@@ -1,6 +1,3 @@
-import 'package:e_garage_proveedor/Test/EgresarVehiculo_Test.dart';
-import 'package:e_garage_proveedor/Test/IngresarVehiculo_Test.dart';
-import 'package:e_garage_proveedor/Test/RegistrarPagoEfectivo.dart';
 import 'package:e_garage_proveedor/Test/RegistrarPagoEnElGarage.dart';
 import 'package:e_garage_proveedor/Test/ingresarVehiculoAGarage.dart';
 import 'package:e_garage_proveedor/Test/listaGarageEgresoVehiculo.dart';
@@ -91,11 +88,6 @@ final GoRouter appRouter = GoRouter(
           return RegistrarpagoEnefectivoEnElGarage(garage: garage);
         }),
     GoRoute(
-      path: '/Ingresarvehiculo',
-      builder: (context, state) => const Ingresarvehiculo(),
-      name: Ingresarvehiculo.name,
-    ),
-    GoRoute(
       path: '/listaDeGarageParaIngresarVehiculos',
       builder: (context, state) => const listaDeGarageParaIngresarVehiculos(),
       name: listaDeGarageParaIngresarVehiculos.name,
@@ -109,16 +101,6 @@ final GoRouter appRouter = GoRouter(
       path: '/listaDeGarageParaPagar',
       builder: (context, state) => const listaDeGarageParaPagar(),
       name: listaDeGarageParaPagar.name,
-    ),
-    GoRoute(
-      path: '/Retirarvehiculo',
-      builder: (context, state) => const Retirarvehiculo(),
-      name: Retirarvehiculo.name,
-    ),
-    GoRoute(
-      path: '/Registrarpagoefectivo',
-      builder: (context, state) => const Registrarpagoefectivo(),
-      name: Registrarpagoefectivo.name,
     ),
     GoRoute(
       path: '/LoginAdministrador',

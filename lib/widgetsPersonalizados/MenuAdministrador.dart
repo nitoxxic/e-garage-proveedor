@@ -1,6 +1,3 @@
-import 'package:e_garage_proveedor/Test/IngresarVehiculo_Test.dart';
-import 'package:e_garage_proveedor/Test/EgresarVehiculo_Test.dart';
-import 'package:e_garage_proveedor/Test/RegistrarPagoEfectivo.dart';
 import 'package:e_garage_proveedor/Test/listaGarageEgresoVehiculo.dart';
 import 'package:e_garage_proveedor/Test/listaGarageIngresoVehiculo.dart';
 import 'package:e_garage_proveedor/Test/listaGarageParaPagar.dart';
