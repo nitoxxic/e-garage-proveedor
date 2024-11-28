@@ -1,6 +1,7 @@
 import 'package:e_garage_proveedor/Test/EgresarVehiculo_Test.dart';
 import 'package:e_garage_proveedor/Test/IngresarVehiculo_Test.dart';
 import 'package:e_garage_proveedor/Test/RegistrarPagoEfectivo.dart';
+import 'package:e_garage_proveedor/Test/ingresarVehiculoAGarage.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
 import 'package:e_garage_proveedor/screens/comentariosGarage.dart';
 import 'package:e_garage_proveedor/screens/recuperacionPassword.dart';
@@ -63,6 +64,13 @@ final GoRouter appRouter = GoRouter(
         builder: (context, state) {
           final garage = state.extra as Garage;
           return ComentariosGarage(garage: garage);
+        }),
+    GoRoute(
+        path: '/IngresarVehiculoAlGarage',
+        name: 'IngresarVehiculoAlGarage',
+        builder: (context, state) {
+          final garage = state.extra as Garage;
+          return IngresarvehiculoAlGarage(garage: garage);
         }),
     GoRoute(
       path: '/Ingresarvehiculo',

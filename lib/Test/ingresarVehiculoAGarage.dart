@@ -1,18 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_garage_proveedor/core/Entities/Garage.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/BotonAtras.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/MenuAdministrador.dart';
 import 'package:e_garage_proveedor/widgetsPersonalizados/dialog_box.dart';
 import 'package:flutter/material.dart';
 
-class Registrarpagoefectivo extends StatefulWidget {
-  static const String name = 'Registrarpagoefectivo';
-  const Registrarpagoefectivo({super.key});
+class IngresarvehiculoAlGarage extends StatefulWidget {
+  static const String name = 'IngresarvehiculoAlGarage';
+  final Garage garage;
+
+  const IngresarvehiculoAlGarage({Key? key, required this.garage})
+      : super(key: key);
 
   @override
-  State<Registrarpagoefectivo> createState() => _RegistrarpagoefectivoState();
+  State<IngresarvehiculoAlGarage> createState() => _IngresarvehiculoState();
 }
 
-class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
+class _IngresarvehiculoState extends State<IngresarvehiculoAlGarage> {
   final TextEditingController _patenteController = TextEditingController();
   final FocusNode _patenteFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
@@ -21,9 +25,11 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
   @override
   void initState() {
     super.initState();
+    // Añade un listener al controlador para validar el formulario
     _patenteController.addListener(_validateForm);
   }
 
+  // Valida si el formulario es válido y habilita o deshabilita el botón
   void _validateForm() {
     setState(() {
       _isButtonEnabled = _patenteController.text.isNotEmpty &&
@@ -31,18 +37,20 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
     });
   }
 
+  // Valida la patente según los formatos permitidos
   String? _validatePatente(String? value) {
-    final regex1 = RegExp(r'^[A-Za-z]{3}\d{3}$');
-    final regex2 = RegExp(r'^[A-Za-z]{2}\d{3}[A-Za-z]{2}$');
+    final regex1 = RegExp(r'^[A-Za-z]{3}\d{3}$'); // AAA123
+    final regex2 = RegExp(r'^[A-Za-z]{2}\d{3}[A-Za-z]{2}$'); // AA123AA
 
     if (value == null || value.isEmpty) {
       return 'La patente no puede estar vacía';
     } else if (!regex1.hasMatch(value) && !regex2.hasMatch(value)) {
-      return 'Patente no válida. Debe ser 3 letras y 3 \nnúmeros o 2 letras, 3 números y 2 letras.';
+      return 'Patente no válida. Debe ser 3 letras y 3 \n números o 2 letras, 3 números y 2 letras.';
     }
     return null;
   }
 
+  // Muestra un diálogo con el mensaje proporcionado
   void showBox(String message) {
     showDialog(
         context: context,
@@ -54,17 +62,20 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
         });
   }
 
+  // Función de cancelación para cerrar el diálogo
   void onCancel() {
     Navigator.of(context).pop();
   }
 
-  Future<void> _registrarPago(String patenteBuscado) async {
+  // Función para retirar el auto de la base de datos
+  Future<void> _ingresarVehiculo(String patenteBuscado, String idGarage) async {
     final db = FirebaseFirestore.instance;
 
     QuerySnapshot queryReserva = await db
         .collection('Reservas')
+        .where('garajeId', isEqualTo: idGarage)
         .where('elvehiculo.patente', isEqualTo: patenteBuscado)
-        .where('estaPago', isNotEqualTo: true)
+        .where('seRetiro', isNotEqualTo: true)
         .limit(1)
         .get();
 
@@ -73,16 +84,29 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
           'No se encontró ningún auto con esa patente que tenga una reserva');
     } else {
       DocumentSnapshot docReserva = queryReserva.docs.first;
-
-      if (docReserva['estaPago'] == false) {
-        await db.collection('Reservas').doc(docReserva.id).update({
-          'estaPago': true,
-        });
+      if (docReserva['estaPago'] == true &&
+          docReserva['fueAlGarage'] == false) {
+        String garageId = docReserva['garajeId'];
+        DocumentSnapshot garageSnapshot =
+            await db.collection('garages').doc(garageId).get();
+        if (garageSnapshot.exists) {
+          int lugaresDisponibles = garageSnapshot['lugaresDisponibles'];
+          await db.collection('Reservas').doc(docReserva.id).update({
+            'fueAlGarage': true,
+          });
+          await db.collection('garages').doc(garageId).update({
+            'lugaresDisponibles': lugaresDisponibles - 1,
+          });
+        }
         showBox(
-            'Pago de la reserva registrado para el vehiculo con patente ${docReserva['elvehiculo']['patente']}');
+            'Se ha ingresado el vehiculo con patente ${docReserva['elvehiculo']['patente']}');
+      } else if (docReserva['estaPago'] == true &&
+          docReserva['fueAlGarage'] == true) {
+        showBox(
+            'Advertencia: El vehiculo con patente ${docReserva['elvehiculo']['patente']} ya habia sido ingresado');
       } else {
         showBox(
-            'La reserva ya se encontraba abonada para la patente: ${docReserva['elvehiculo']['patente']}');
+            'Reserva no abonada para la patente: ${docReserva['elvehiculo']['patente']}');
       }
     }
   }
@@ -96,6 +120,7 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
 
   @override
   Widget build(BuildContext context) {
+    final garage = widget.garage; // Accede al Garage desde widget.garage
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -126,7 +151,7 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const Text(
-                            'Ingrese la patente para registrar el pago',
+                            'Ingresar Vehiculo',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24,
@@ -134,29 +159,34 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 20),
+
                           TextFormField(
                             style: const TextStyle(color: Colors.white),
                             controller: _patenteController,
                             focusNode: _patenteFocusNode,
                             decoration: const InputDecoration(
-                              labelStyle: TextStyle(color: Colors.white),
-                              labelText: 'Patente',
-                              border: OutlineInputBorder(),
-                            ),
+                                labelText: 'Patente',
+                                border: OutlineInputBorder(),
+                                labelStyle: TextStyle(color: Colors.white)),
                             validator: _validatePatente,
                           ),
+
                           const SizedBox(height: 50),
+
+                          // Botón para retirar el vehículo
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: _isButtonEnabled
                                   ? () async {
+                                      // Si el formulario es válido, retira el vehículo
                                       if (_formKey.currentState!.validate()) {
-                                        await _registrarPago(
-                                            _patenteController.text);
+                                        await _ingresarVehiculo(
+                                            _patenteController.text, garage.id);
                                       }
                                     }
                                   : () {
+                                      // Si el formulario no es válido, muestra un mensaje de error
                                       if (!_formKey.currentState!.validate()) {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
@@ -169,7 +199,7 @@ class _RegistrarpagoefectivoState extends State<Registrarpagoefectivo> {
                                       }
                                     },
                               child: const Text(
-                                'Registrar',
+                                'Ingresar',
                                 style: TextStyle(fontSize: 18),
                               ),
                             ),

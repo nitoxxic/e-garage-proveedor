@@ -1,3 +1,4 @@
+import 'package:e_garage_proveedor/Test/ingresarVehiculoAGarage.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
 import 'package:e_garage_proveedor/screens/comentariosGarage.dart';
 import 'package:e_garage_proveedor/screens/editarGarage.dart';
@@ -136,6 +137,18 @@ class _DetalleGarageState extends State<DetalleGarage> {
                     );
                   },
                   child: const Text('Comentarios'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            IngresarvehiculoAlGarage(garage: widget.garage),
+                      ),
+                    );
+                  },
+                  child: const Text('Ingresar vehiculos'),
                 ),
               ],
             ),
