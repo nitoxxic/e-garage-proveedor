@@ -1,7 +1,11 @@
 import 'package:e_garage_proveedor/Test/EgresarVehiculo_Test.dart';
 import 'package:e_garage_proveedor/Test/IngresarVehiculo_Test.dart';
 import 'package:e_garage_proveedor/Test/RegistrarPagoEfectivo.dart';
+import 'package:e_garage_proveedor/Test/RegistrarPagoEnElGarage.dart';
 import 'package:e_garage_proveedor/Test/ingresarVehiculoAGarage.dart';
+import 'package:e_garage_proveedor/Test/listaGarageEgresoVehiculo.dart';
+import 'package:e_garage_proveedor/Test/listaGarageIngresoVehiculo.dart';
+import 'package:e_garage_proveedor/Test/listaGarageParaPagar.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
 import 'package:e_garage_proveedor/screens/comentariosGarage.dart';
 import 'package:e_garage_proveedor/screens/recuperacionPassword.dart';
@@ -73,9 +77,38 @@ final GoRouter appRouter = GoRouter(
           return IngresarvehiculoAlGarage(garage: garage);
         }),
     GoRoute(
+        path: '/EgresarVehiculodelGarage',
+        name: 'EgresarVehiculodelGarage',
+        builder: (context, state) {
+          final garage = state.extra as Garage;
+          return IngresarvehiculoAlGarage(garage: garage);
+        }),
+    GoRoute(
+        path: '/PagarReservaEnElGarage',
+        name: 'PagarReservaEnElGarage',
+        builder: (context, state) {
+          final garage = state.extra as Garage;
+          return RegistrarpagoEnefectivoEnElGarage(garage: garage);
+        }),
+    GoRoute(
       path: '/Ingresarvehiculo',
       builder: (context, state) => const Ingresarvehiculo(),
       name: Ingresarvehiculo.name,
+    ),
+    GoRoute(
+      path: '/listaDeGarageParaIngresarVehiculos',
+      builder: (context, state) => const listaDeGarageParaIngresarVehiculos(),
+      name: listaDeGarageParaIngresarVehiculos.name,
+    ),
+    GoRoute(
+      path: '/listaDeGarageParaEgresarVehiculos',
+      builder: (context, state) => const listaDeGarageParaEngresarVehiculos(),
+      name: listaDeGarageParaEngresarVehiculos.name,
+    ),
+    GoRoute(
+      path: '/listaDeGarageParaPagar',
+      builder: (context, state) => const listaDeGarageParaPagar(),
+      name: listaDeGarageParaPagar.name,
     ),
     GoRoute(
       path: '/Retirarvehiculo',

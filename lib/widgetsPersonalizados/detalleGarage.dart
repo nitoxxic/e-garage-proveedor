@@ -1,3 +1,5 @@
+import 'package:e_garage_proveedor/Test/RegistrarPagoEnElGarage.dart';
+import 'package:e_garage_proveedor/Test/egrasarVehiculoAlGarage.dart';
 import 'package:e_garage_proveedor/Test/ingresarVehiculoAGarage.dart';
 import 'package:e_garage_proveedor/core/Entities/Garage.dart';
 import 'package:e_garage_proveedor/screens/comentariosGarage.dart';
@@ -149,6 +151,30 @@ class _DetalleGarageState extends State<DetalleGarage> {
                     );
                   },
                   child: const Text('Ingresar vehiculos'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            RetirarVehiculoDelGarage(garage: widget.garage),
+                      ),
+                    );
+                  },
+                  child: const Text('Egresar vehiculos'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RegistrarpagoEnefectivoEnElGarage(
+                            garage: widget.garage),
+                      ),
+                    );
+                  },
+                  child: const Text('Registrar pago'),
                 ),
               ],
             ),

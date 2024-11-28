@@ -1,6 +1,9 @@
 import 'package:e_garage_proveedor/Test/IngresarVehiculo_Test.dart';
 import 'package:e_garage_proveedor/Test/EgresarVehiculo_Test.dart';
 import 'package:e_garage_proveedor/Test/RegistrarPagoEfectivo.dart';
+import 'package:e_garage_proveedor/Test/listaGarageEgresoVehiculo.dart';
+import 'package:e_garage_proveedor/Test/listaGarageIngresoVehiculo.dart';
+import 'package:e_garage_proveedor/Test/listaGarageParaPagar.dart';
 import 'package:e_garage_proveedor/core/Providers/user_provider.dart';
 import 'package:e_garage_proveedor/screens/ingresos.dart';
 import 'package:e_garage_proveedor/screens/pantallaReservas.dart';
@@ -83,7 +86,8 @@ class MenuAdministrador extends ConsumerWidget {
               title:
                   const Text('Registrar pago', style: TextStyle(fontSize: 18)),
               onTap: () {
-                context.goNamed(Registrarpagoefectivo.name);
+                context.goNamed(listaDeGarageParaPagar.name);
+                //context.goNamed(Registrarpagoefectivo.name);
               },
             ),
             ListTile(
@@ -92,7 +96,8 @@ class MenuAdministrador extends ConsumerWidget {
               title: const Text('Ingresar Vehiculo',
                   style: TextStyle(fontSize: 18)),
               onTap: () {
-                context.goNamed(Ingresarvehiculo.name);
+                context.goNamed(listaDeGarageParaIngresarVehiculos.name);
+                //context.goNamed(Ingresarvehiculo.name);
               },
             ),
             ListTile(
@@ -101,7 +106,8 @@ class MenuAdministrador extends ConsumerWidget {
               title: const Text('Egresar Vehiculo',
                   style: TextStyle(fontSize: 18)),
               onTap: () {
-                context.goNamed(Retirarvehiculo.name);
+                context.goNamed(listaDeGarageParaEngresarVehiculos.name);
+                //context.goNamed(Retirarvehiculo.name);
               },
             ),
             ListTile(
